@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: faturacao
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/faturacao
+    username: faturacao
+    password: faturacao
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    show-sql: true
+
+  flyway:
+    enabled: true

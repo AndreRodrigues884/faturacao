@@ -1,0 +1,15 @@
+services:
+  db:
+    image: postgres:17
+    container_name: faturacao-db
+    environment:
+      POSTGRES_DB: faturacao
+      POSTGRES_USER: faturacao
+      POSTGRES_PASSWORD: faturacao
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
