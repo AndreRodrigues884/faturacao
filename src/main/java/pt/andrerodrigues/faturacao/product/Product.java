@@ -17,11 +17,13 @@ import java.time.Instant;
 /**
  * ENTIDADE - representa uma linha da tabela products (produtos e serviços).
  *
- * Fala com:     ProductType, VatRate (enums dos seus campos)
- * É usado por:  ProductRepository (lê/grava), ProductService (cria/altera/desativa),
- *               ProductResponse (é convertida em DTO)
+ * Fala com: ProductType, VatRate (enums dos seus campos)
+ * É usado por: ProductRepository (lê/grava), ProductService
+ * (cria/altera/desativa),
+ * ProductResponse (é convertida em DTO)
  *
- * Nunca é apagada: é desativada (active = false), porque pode estar em faturas antigas.
+ * Nunca é apagada: é desativada (active = false), porque pode estar em faturas
+ * antigas.
  */
 @Entity
 @Table(name = "products")
@@ -64,7 +66,7 @@ public class Product {
     }
 
     public Product(String code, String name, String description, ProductType type,
-                   BigDecimal unitPrice, VatRate vatRate) {
+            BigDecimal unitPrice, VatRate vatRate) {
         this.code = code;
         this.name = name;
         this.description = description;
@@ -86,7 +88,7 @@ public class Product {
     }
 
     public void update(String code, String name, String description, ProductType type,
-                       BigDecimal unitPrice, VatRate vatRate) {
+            BigDecimal unitPrice, VatRate vatRate) {
         this.code = code;
         this.name = name;
         this.description = description;
@@ -99,14 +101,47 @@ public class Product {
         this.active = false;
     }
 
-    public Long getId() { return id; }
-    public String getCode() { return code; }
-    public String getName() { return name; }
-    public String getDescription() { return description; }
-    public ProductType getType() { return type; }
-    public BigDecimal getUnitPrice() { return unitPrice; }
-    public VatRate getVatRate() { return vatRate; }
-    public boolean isActive() { return active; }
-    public Instant getCreatedAt() { return createdAt; }
-    public Instant getUpdatedAt() { return updatedAt; }
+    public void activate() {
+        this.active = true;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public ProductType getType() {
+        return type;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public VatRate getVatRate() {
+        return vatRate;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 }

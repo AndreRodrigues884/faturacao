@@ -16,8 +16,14 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Global exception handler for the application.
- * Handles specific exceptions and returns appropriate HTTP responses.
+ * TRATAMENTO DE ERROS GLOBAL - transforma exceções em respostas HTTP.
+ *
+ * Apanha:       ResourceNotFoundException -> 404
+ *               DuplicateResourceException -> 409
+ *               DataIntegrityViolationException -> 409 (erro vindo da base de dados)
+ *               BusinessRuleException -> 422
+ *               erros de validação do @Valid -> 400
+ * É usado por:  o Spring, automaticamente, para TODOS os controllers do projeto
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -36,12 +42,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return problem;
     }
 
-    /**
-     * Handles DataIntegrityViolationException, which is thrown when a database operation violates integrity constraints.
-     *
-     * @param ex the DataIntegrityViolationException
-     * @return a ProblemDetail object with HTTP status 409 (Conflict) and a descriptive message
-     */
+    @ExceptionHandler(BusinessRuleException.class)
+    public ProblemDetail handleBusinessRule(BusinessRuleException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatusCode.valueOf(422), ex.getMessage());
+        problem.setTitle("Regra de negócio violada");
+        return problem;
+    }
+
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ProblemDetail handleDataIntegrity(DataIntegrityViolationException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(

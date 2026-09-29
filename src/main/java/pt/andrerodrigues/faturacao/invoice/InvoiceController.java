@@ -1,4 +1,4 @@
-package pt.andrerodrigues.faturacao.product;
+package pt.andrerodrigues.faturacao.invoice;
 
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -10,47 +10,38 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 /**
- * CONTROLLER - porta de entrada HTTP (/api/products).
+ * CONTROLLER - porta de entrada HTTP (/api/invoices).
  *
- * Fala com: ProductService (só com ele)
- * Recebe: ProductRequest (JSON enviado pelo cliente)
- * Devolve: ProductResponse (JSON enviado ao cliente)
- * É usado por: clientes externos (Postman, Angular)
- *
- * O DELETE não apaga: desativa o produto (soft delete).
+ * Fala com:     InvoiceService (só com ele)
+ * Recebe:       InvoiceRequest (JSON enviado pelo cliente)
+ * Devolve:      InvoiceResponse (JSON enviado ao cliente)
+ * É usado por:  clientes externos (Postman, Angular)
  */
 @RestController
-@RequestMapping("/api/products")
-public class ProductController {
+@RequestMapping("/api/invoices")
+public class InvoiceController {
 
-    private final ProductService service;
+    private final InvoiceService service;
 
-    public ProductController(ProductService service) {
+    public InvoiceController(InvoiceService service) {
         this.service = service;
     }
 
-    @GetMapping
-    public List<ProductResponse> list(@RequestParam(defaultValue = "false") boolean includeInactive) {
-        return service.findAll(includeInactive);
-    }
-
     @GetMapping("/{id}")
-    public ProductResponse get(@PathVariable Long id) {
+    public InvoiceResponse get(@PathVariable Long id) {
         return service.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> create(@Valid @RequestBody ProductRequest request) {
-        ProductResponse created = service.create(request);
+    public ResponseEntity<InvoiceResponse> create(@Valid @RequestBody InvoiceRequest request) {
+        InvoiceResponse created = service.create(request);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
@@ -61,18 +52,13 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ProductResponse update(@PathVariable Long id, @Valid @RequestBody ProductRequest request) {
+    public InvoiceResponse update(@PathVariable Long id, @Valid @RequestBody InvoiceRequest request) {
         return service.update(id, request);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deactivate(@PathVariable Long id) {
-        service.deactivate(id);
-    }
-
-    @PostMapping("/{id}/activate")
-    public ProductResponse activate(@PathVariable Long id) {
-        return service.activate(id);
+    public void delete(@PathVariable Long id) {
+        service.delete(id);
     }
 }

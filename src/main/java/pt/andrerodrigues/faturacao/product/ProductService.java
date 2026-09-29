@@ -13,11 +13,11 @@ import java.util.Locale;
 /**
  * SERVICE - regras de negócio dos produtos e serviços.
  *
- * Fala com:     ProductRepository (para ler e gravar)
- * Usa:          Product (entidade), ProductRequest (dados recebidos),
- *               ProductResponse (converte a entidade antes de devolver)
- * Lança:        ResourceNotFoundException, DuplicateResourceException (pasta common)
- * É usado por:  ProductController
+ * Fala com: ProductRepository (para ler e gravar)
+ * Usa: Product (entidade), ProductRequest (dados recebidos),
+ * ProductResponse (converte a entidade antes de devolver)
+ * Lança: ResourceNotFoundException, DuplicateResourceException (pasta common)
+ * É usado por: ProductController
  */
 @Service
 @Transactional(readOnly = true)
@@ -57,8 +57,7 @@ public class ProductService {
                 blankToNull(request.description()),
                 request.type(),
                 normalizePrice(request.unitPrice()),
-                request.vatRate()
-        );
+                request.vatRate());
 
         return ProductResponse.from(repository.save(product));
     }
@@ -78,8 +77,7 @@ public class ProductService {
                 blankToNull(request.description()),
                 request.type(),
                 normalizePrice(request.unitPrice()),
-                request.vatRate()
-        );
+                request.vatRate());
 
         return ProductResponse.from(product);
     }
@@ -87,6 +85,13 @@ public class ProductService {
     @Transactional
     public void deactivate(Long id) {
         getOrThrow(id).deactivate();
+    }
+
+    @Transactional
+    public ProductResponse activate(Long id) {
+        Product product = getOrThrow(id);
+        product.activate();
+        return ProductResponse.from(product);
     }
 
     private Product getOrThrow(Long id) {
