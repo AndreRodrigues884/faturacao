@@ -1,5 +1,6 @@
-package pt.andrerodrigues.faturacao.invoice;
+package pt.andrerodrigues.faturacao.invoice.dto;
 
+import pt.andrerodrigues.faturacao.invoice.domain.InvoiceLine;
 import pt.andrerodrigues.faturacao.product.VatRate;
 
 import java.math.BigDecimal;

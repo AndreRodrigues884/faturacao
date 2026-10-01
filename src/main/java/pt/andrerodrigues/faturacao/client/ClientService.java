@@ -85,6 +85,7 @@ public class ClientService {
                 blankToNull(request.city())
         );
 
+        repository.flush();
         return ClientResponse.from(client);
     }
 

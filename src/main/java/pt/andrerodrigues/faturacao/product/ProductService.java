@@ -79,6 +79,7 @@ public class ProductService {
                 normalizePrice(request.unitPrice()),
                 request.vatRate());
 
+        repository.flush();
         return ProductResponse.from(product);
     }
 
@@ -91,6 +92,7 @@ public class ProductService {
     public ProductResponse activate(Long id) {
         Product product = getOrThrow(id);
         product.activate();
+        repository.flush();
         return ProductResponse.from(product);
     }
 

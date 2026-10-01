@@ -317,7 +317,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n  \"clientId\": 4,\r\n  \"dueDate\": \"2026-11-15\",\r\n  \"notes\": \"Projeto de outubro\",\r\n  \"lines\": [\r\n    { \"productId\": 1, \"quantity\": 5 },\r\n    { \"productId\": 2, \"quantity\": 1.5 }\r\n  ]\r\n}",
+              "raw": "{\r\n  \"clientId\": 4,\r\n  \"dueDate\": \"2026-12-31\",\r\n  \"lines\": [\r\n    { \"productId\": 1, \"quantity\": 1 }\r\n  ]\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -343,14 +343,14 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/api/invoices/1",
+              "raw": "{{baseUrl}}/api/invoices/3",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "api",
                 "invoices",
-                "1"
+                "3"
               ]
             }
           },
@@ -417,6 +417,149 @@
                 "api",
                 "invoices",
                 "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Emitir a fatura 1",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/3/issue",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "3",
+                "issue"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Proteção",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "   {\r\n     \"name\": \"Cliente Exemplo, Lda.\",\r\n     \"nif\": \"509999999\",\r\n     \"email\": \"geral@exemplo.pt\",\r\n     \"address\": \"Rua Nova, 10\",\r\n     \"postalCode\": \"4700-001\",\r\n     \"city\": \"Braga\"\r\n   }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/clients/1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "clients",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pagar a fatura",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/2/pay",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "2",
+                "pay"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Anular Fatura",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"reason\": \"Valor faturado incorretamente\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/3/cancel",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "3",
+                "cancel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sem saltos na numeração",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/invoices/3",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "invoices",
+                "3"
               ]
             }
           },

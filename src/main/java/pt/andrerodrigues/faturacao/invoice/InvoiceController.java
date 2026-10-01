@@ -1,6 +1,11 @@
 package pt.andrerodrigues.faturacao.invoice;
 
 import jakarta.validation.Valid;
+import pt.andrerodrigues.faturacao.invoice.dto.CancelRequest;
+import pt.andrerodrigues.faturacao.invoice.dto.InvoiceRequest;
+import pt.andrerodrigues.faturacao.invoice.dto.InvoiceResponse;
+import pt.andrerodrigues.faturacao.invoice.dto.PaymentRequest;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,10 +23,11 @@ import java.net.URI;
 
 /**
  * CONTROLLER - porta de entrada HTTP (/api/invoices).
+ * CRUD do rascunho + ações do ciclo de vida (/issue, /pay, /cancel).
  *
  * Fala com:     InvoiceService (só com ele)
- * Recebe:       InvoiceRequest (JSON enviado pelo cliente)
- * Devolve:      InvoiceResponse (JSON enviado ao cliente)
+ * Recebe:       InvoiceRequest, PaymentRequest, CancelRequest
+ * Devolve:      InvoiceResponse
  * É usado por:  clientes externos (Postman, Angular)
  */
 @RestController
@@ -60,5 +66,22 @@ public class InvoiceController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         service.delete(id);
+    }
+
+    @PostMapping("/{id}/issue")
+    public InvoiceResponse issue(@PathVariable Long id) {
+        return service.issue(id);
+    }
+
+    @PostMapping("/{id}/pay")
+    public InvoiceResponse pay(@PathVariable Long id,
+                               @Valid @RequestBody(required = false) PaymentRequest request) {
+        return service.markAsPaid(id, request);
+    }
+
+    @PostMapping("/{id}/cancel")
+    public InvoiceResponse cancel(@PathVariable Long id,
+                                  @Valid @RequestBody CancelRequest request) {
+        return service.cancel(id, request);
     }
 }

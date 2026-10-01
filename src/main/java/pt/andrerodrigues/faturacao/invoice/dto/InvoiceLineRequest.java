@@ -1,4 +1,4 @@
-package pt.andrerodrigues.faturacao.invoice;
+package pt.andrerodrigues.faturacao.invoice.dto;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Digits;

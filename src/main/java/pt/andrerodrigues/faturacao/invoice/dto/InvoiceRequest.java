@@ -1,4 +1,4 @@
-package pt.andrerodrigues.faturacao.invoice;
+package pt.andrerodrigues.faturacao.invoice.dto;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,4 +1,4 @@
-package pt.andrerodrigues.faturacao.invoice;
+package pt.andrerodrigues.faturacao.invoice.domain;
 
 /**
  * ENUM - os estados possíveis de uma fatura.

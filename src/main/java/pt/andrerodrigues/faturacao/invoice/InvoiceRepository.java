@@ -3,6 +3,8 @@ package pt.andrerodrigues.faturacao.invoice;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import pt.andrerodrigues.faturacao.invoice.domain.Invoice;
+
 import java.util.Optional;
 
 /**

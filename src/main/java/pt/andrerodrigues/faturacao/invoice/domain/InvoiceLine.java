@@ -1,4 +1,4 @@
-package pt.andrerodrigues.faturacao.invoice;
+package pt.andrerodrigues.faturacao.invoice.domain;
 
 import jakarta.persistence.*;
 import pt.andrerodrigues.faturacao.product.Product;
