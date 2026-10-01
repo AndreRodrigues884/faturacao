@@ -703,6 +703,175 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "Despesas",
+      "item": [
+        {
+          "name": "Listar Despesas",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expenses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Despesas por Categoria",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses?categoryId=2",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expenses"
+              ],
+              "query": [
+                {
+                  "key": "categoryId",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Listar Despesa por Método de Pagamento",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses?paymentMethod=CARD",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expenses"
+              ],
+              "query": [
+                {
+                  "key": "paymentMethod",
+                  "value": "CARD"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pesquisar Despesa do total maior para o menor",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses?sort=totalAmount,desc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expenses"
+              ],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "totalAmount,desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Criar Despesa",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"categoryId\": 2,\r\n  \"description\": \"Jantar de equipa\",\r\n  \"supplierName\": \"Restaurante do Largo\",\r\n  \"supplierNif\": \"509 999 999\",\r\n  \"expenseDate\": \"2026-09-30\",\r\n  \"totalAmount\": 84.75,\r\n  \"vatAmount\": 9.75,\r\n  \"paymentMethod\": \"CARD\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expenses"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Editar Despesa",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"categoryId\": 2,\r\n  \"description\": \"Jantar de equipa\",\r\n  \"supplierName\": \"Restaurante do Largo\",\r\n  \"supplierNif\": \"509999999\",\r\n  \"expenseDate\": \"2026-09-30\",\r\n  \"totalAmount\": 90.00,\r\n  \"vatAmount\": 9.75,\r\n  \"paymentMethod\": \"CARD\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses/9",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expenses",
+                "9"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Eliminar Despesa",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/expenses/9",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "expenses",
+                "9"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [

@@ -6,6 +6,7 @@ import pt.andrerodrigues.faturacao.client.Client;
 import pt.andrerodrigues.faturacao.client.ClientRepository;
 import pt.andrerodrigues.faturacao.common.BusinessRuleException;
 import pt.andrerodrigues.faturacao.common.ResourceNotFoundException;
+import pt.andrerodrigues.faturacao.common.SortValidator;
 import pt.andrerodrigues.faturacao.invoice.domain.Invoice;
 import pt.andrerodrigues.faturacao.invoice.dto.CancelRequest;
 import pt.andrerodrigues.faturacao.invoice.dto.InvoiceLineRequest;
@@ -69,7 +70,7 @@ public class InvoiceService {
     }
 
     public PageResponse<InvoiceSummaryResponse> search(InvoiceFilter filter, Pageable pageable) {
-        validateSort(pageable);
+        SortValidator.validate(pageable, SORTABLE_FIELDS);
 
         if (filter.issuedFrom() != null && filter.issuedTo() != null
                 && filter.issuedFrom().isAfter(filter.issuedTo())) {
@@ -190,13 +191,4 @@ public class InvoiceService {
         return (value == null || value.isBlank()) ? null : value.trim();
     }
 
-    private static void validateSort(Pageable pageable) {
-        pageable.getSort().forEach(order -> {
-            if (!SORTABLE_FIELDS.contains(order.getProperty())) {
-                throw new BusinessRuleException(
-                        "Não é possível ordenar por '" + order.getProperty() + "'. Campos permitidos: "
-                                + SORTABLE_FIELDS);
-            }
-        });
-    }
 }
