@@ -2,6 +2,11 @@ spring:
   application:
     name: faturacao
 
+  data:
+    web:
+      pageable:
+        max-page-size: 100
+
   datasource:
     url: jdbc:postgresql://localhost:5433/faturacao
     username: faturacao

@@ -15,6 +15,11 @@ import pt.andrerodrigues.faturacao.invoice.dto.PaymentRequest;
 import pt.andrerodrigues.faturacao.invoice.numbering.InvoiceNumberGenerator;
 import pt.andrerodrigues.faturacao.product.Product;
 import pt.andrerodrigues.faturacao.product.ProductRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import pt.andrerodrigues.faturacao.common.PageResponse;
+import pt.andrerodrigues.faturacao.invoice.dto.InvoiceFilter;
+import pt.andrerodrigues.faturacao.invoice.dto.InvoiceSummaryResponse;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -41,6 +46,8 @@ public class InvoiceService {
 
     private static final String DEFAULT_SERIES = "FT";
     private static final ZoneId LISBON = ZoneId.of("Europe/Lisbon");
+    private static final Set<String> SORTABLE_FIELDS = Set.of("createdAt", "issueDate", "dueDate", "number", "total",
+            "status");
 
     private final InvoiceRepository invoiceRepository;
     private final ClientRepository clientRepository;
@@ -59,6 +66,22 @@ public class InvoiceService {
 
     public InvoiceResponse findById(Long id) {
         return InvoiceResponse.from(getOrThrow(id));
+    }
+
+    public PageResponse<InvoiceSummaryResponse> search(InvoiceFilter filter, Pageable pageable) {
+        validateSort(pageable);
+
+        if (filter.issuedFrom() != null && filter.issuedTo() != null
+                && filter.issuedFrom().isAfter(filter.issuedTo())) {
+            throw new BusinessRuleException("A data inicial não pode ser posterior à data final");
+        }
+
+        LocalDate today = LocalDate.now(LISBON);
+
+        Page<Invoice> page = invoiceRepository.findAll(
+                InvoiceSpecifications.withFilters(filter, today), pageable);
+
+        return PageResponse.from(page.map(invoice -> InvoiceSummaryResponse.from(invoice, today)));
     }
 
     // ---------- Rascunho ----------
@@ -121,7 +144,7 @@ public class InvoiceService {
                 : LocalDate.now(LISBON);
 
         invoice.markAsPaid(paidDate);
-        
+
         invoiceRepository.flush();
         return InvoiceResponse.from(invoice);
     }
@@ -165,5 +188,15 @@ public class InvoiceService {
 
     private static String blankToNull(String value) {
         return (value == null || value.isBlank()) ? null : value.trim();
+    }
+
+    private static void validateSort(Pageable pageable) {
+        pageable.getSort().forEach(order -> {
+            if (!SORTABLE_FIELDS.contains(order.getProperty())) {
+                throw new BusinessRuleException(
+                        "Não é possível ordenar por '" + order.getProperty() + "'. Campos permitidos: "
+                                + SORTABLE_FIELDS);
+            }
+        });
     }
 }

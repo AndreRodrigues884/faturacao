@@ -18,17 +18,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.bind.annotation.RequestParam;
+import pt.andrerodrigues.faturacao.common.PageResponse;
+import pt.andrerodrigues.faturacao.invoice.domain.InvoiceStatus;
+import pt.andrerodrigues.faturacao.invoice.dto.InvoiceFilter;
+import pt.andrerodrigues.faturacao.invoice.dto.InvoiceSummaryResponse;
 
+import java.time.LocalDate;
 import java.net.URI;
 
 /**
  * CONTROLLER - porta de entrada HTTP (/api/invoices).
  * CRUD do rascunho + ações do ciclo de vida (/issue, /pay, /cancel).
  *
- * Fala com:     InvoiceService (só com ele)
- * Recebe:       InvoiceRequest, PaymentRequest, CancelRequest
- * Devolve:      InvoiceResponse
- * É usado por:  clientes externos (Postman, Angular)
+ * Fala com: InvoiceService (só com ele)
+ * Recebe: InvoiceRequest, PaymentRequest, CancelRequest
+ * Devolve: InvoiceResponse
+ * É usado por: clientes externos (Postman, Angular)
  */
 @RestController
 @RequestMapping("/api/invoices")
@@ -38,6 +48,20 @@ public class InvoiceController {
 
     public InvoiceController(InvoiceService service) {
         this.service = service;
+    }
+
+    @GetMapping
+    public PageResponse<InvoiceSummaryResponse> list(
+            @RequestParam(required = false) InvoiceStatus status,
+            @RequestParam(required = false) Long clientId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate issuedFrom,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate issuedTo,
+            @RequestParam(required = false) Boolean overdue,
+            @RequestParam(required = false) String search,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        InvoiceFilter filter = new InvoiceFilter(status, clientId, issuedFrom, issuedTo, overdue, search);
+        return service.search(filter, pageable);
     }
 
     @GetMapping("/{id}")
@@ -75,13 +99,13 @@ public class InvoiceController {
 
     @PostMapping("/{id}/pay")
     public InvoiceResponse pay(@PathVariable Long id,
-                               @Valid @RequestBody(required = false) PaymentRequest request) {
+            @Valid @RequestBody(required = false) PaymentRequest request) {
         return service.markAsPaid(id, request);
     }
 
     @PostMapping("/{id}/cancel")
     public InvoiceResponse cancel(@PathVariable Long id,
-                                  @Valid @RequestBody CancelRequest request) {
+            @Valid @RequestBody CancelRequest request) {
         return service.cancel(id, request);
     }
 }
