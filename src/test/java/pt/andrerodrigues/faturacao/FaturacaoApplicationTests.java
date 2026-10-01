@@ -1,17 +1,17 @@
 package pt.andrerodrigues.faturacao;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * Basic context load test for the Faturacao application.
- * This test ensures that the Spring application context can start without issues.
+ * TESTE DE INTEGRAÇÃO - a aplicação arranca: o Flyway aplica todas as migrações
+ * e o Hibernate valida que as entidades batem certo com as tabelas.
  */
-@SpringBootTest
-class FaturacaoApplicationTests {
+@DisplayName("Arranque da aplicação")
+class FaturacaoApplicationTests extends IntegrationTest {
 
-	@Test
-	void contextLoads() {
-	}
-
+    @Test
+    @DisplayName("arranca com todas as migrações aplicadas e o esquema validado")
+    void contextLoads() {
+    }
 }
