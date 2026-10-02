@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import pt.andrerodrigues.faturacao.IntegrationTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * Testa:  InvoiceController + InvoiceService + GlobalExceptionHandler (através de toda a aplicação)
  */
+@WithMockUser(roles = "ADMIN")
 @DisplayName("API de faturas")
 class InvoiceApiTest extends IntegrationTest {
 

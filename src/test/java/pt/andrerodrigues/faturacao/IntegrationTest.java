@@ -6,13 +6,13 @@ import org.springframework.context.annotation.Import;
 
 /**
  * BASE DOS TESTES DE INTEGRAÇÃO - arranca a aplicação inteira ligada ao PostgreSQL do Testcontainers,
- * com o MockMvc disponível para simular pedidos HTTP.
+ * com o MockMvc disponível para simular pedidos HTTP e o @WithMockUser a funcionar.
  *
- * Fala com:     TestcontainersConfiguration
+ * Fala com:     TestcontainersConfiguration, SecurityTestConfiguration
  * É usado por:  todos os testes de integração e da API
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(TestcontainersConfiguration.class)
+@Import({TestcontainersConfiguration.class, SecurityTestConfiguration.class})
 public abstract class IntegrationTest {
 }

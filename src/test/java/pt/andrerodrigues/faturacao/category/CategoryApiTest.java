@@ -9,6 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.test.web.servlet.assertj.MvcTestResult;
 import pt.andrerodrigues.faturacao.IntegrationTest;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import java.nio.charset.StandardCharsets;
 
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  *
  * Testa:  CategoryController + GlobalExceptionHandler (através de toda a aplicação)
  */
+@WithMockUser(roles = "ADMIN")
 @DisplayName("API de categorias")
 class CategoryApiTest extends IntegrationTest {
 

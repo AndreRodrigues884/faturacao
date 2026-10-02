@@ -63,6 +63,23 @@ public class User {
         this.updatedAt = Instant.now();
     }
 
+        public void update(String name, Role role) {
+        this.name = name;
+        this.role = role;
+    }
+
+    public void changePassword(String newPasswordHash) {
+        this.passwordHash = newPasswordHash;
+    }
+
+    public void deactivate() {
+        this.active = false;
+    }
+
+    public void activate() {
+        this.active = true;
+    }
+
     public Long getId() { return id; }
     public String getEmail() { return email; }
     public String getName() { return name; }
