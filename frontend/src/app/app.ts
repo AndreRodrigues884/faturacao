@@ -1,12 +1,16 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
+/**
+ * COMPONENTE RAIZ - a "moldura" da aplicação: só mostra a página da rota atual.
+ *
+ * Fala com:     RouterOutlet
+ * É usado por:  main.ts (é o primeiro componente a ser desenhado)
+ */
 @Component({
-  imports: [RouterOutlet],
   selector: 'app-root',
-  styleUrl: './app.scss',
+  imports: [RouterOutlet],
   templateUrl: './app.html',
+  styleUrl: './app.scss',
 })
-export class App {
-  protected readonly title = signal('frontend');
-}
+export class App {}

@@ -1,0 +1,12 @@
+<h1>Olá, {{ auth.currentUser()?.name }}</h1>
+
+<mat-card appearance="outlined" class="card">
+  <mat-card-content>
+    <p>Categorias registadas: <strong>{{ categories().length }}</strong></p>
+    @if (auth.isAdmin()) {
+      <p>Tem acesso de administrador: pode anular faturas, apagar registos e gerir utilizadores.</p>
+    } @else {
+      <p>Tem acesso de utilizador: pode consultar e trabalhar em faturas, clientes e despesas.</p>
+    }
+  </mat-card-content>
+</mat-card>
