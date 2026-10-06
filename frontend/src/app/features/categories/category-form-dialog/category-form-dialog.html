@@ -1,0 +1,36 @@
+<h2 mat-dialog-title>{{ category ? 'Editar categoria' : 'Nova categoria' }}</h2>
+
+<mat-dialog-content>
+  <form id="category-form" [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" />
+      @if (form.controls.name.hasError('required')) {
+        <mat-error>O nome é obrigatório</mat-error>
+      } @else if (form.controls.name.hasError('maxlength')) {
+        <mat-error>O nome não pode ter mais de 80 caracteres</mat-error>
+      } @else if (form.controls.name.hasError('server')) {
+        <mat-error>{{ form.controls.name.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput rows="3" formControlName="description"></textarea>
+      @if (form.controls.description.hasError('maxlength')) {
+        <mat-error>A descrição não pode ter mais de 255 caracteres</mat-error>
+      } @else if (form.controls.description.hasError('server')) {
+        <mat-error>{{ form.controls.description.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+  </form>
+
+  @if (errorMessage(); as message) {
+    <p class="error-message">{{ message }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="submit" form="category-form" [disabled]="saving()">Guardar</button>
+</mat-dialog-actions>

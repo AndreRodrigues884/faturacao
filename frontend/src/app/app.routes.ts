@@ -25,5 +25,10 @@ export const routes: Routes = [
       { path: 'inicio', component: Home },
     ],
   },
+        {
+        path: 'categorias',
+        loadComponent: () =>
+          import('./features/categories/category-list/category-list').then((m) => m.CategoryList),
+      },
   { path: '**', redirectTo: '' },
 ];
