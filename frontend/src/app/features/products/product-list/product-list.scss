@@ -1,0 +1,38 @@
+mat-slide-toggle {
+  display: block;
+  margin-bottom: 12px;
+}
+
+table {
+  width: 100%;
+}
+
+.number {
+  text-align: right;
+}
+
+.actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.danger {
+  color: #c62828;
+}
+
+.inactive {
+  opacity: 0.55;
+}
+
+.badge {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #eeeeee;
+  font-size: 12px;
+}
+
+.empty {
+  padding: 16px;
+  color: #757575;
+}

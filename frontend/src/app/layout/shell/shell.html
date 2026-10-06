@@ -3,7 +3,9 @@
     <div class="brand">Faturação</div>
     <mat-nav-list>
       <a mat-list-item routerLink="/inicio" routerLinkActive="active">Início</a>
-            <a mat-list-item routerLink="/categorias" routerLinkActive="active">Categorias</a>
+      <a mat-list-item routerLink="/clientes" routerLinkActive="active">Clientes</a>
+      <a mat-list-item routerLink="/produtos" routerLinkActive="active">Produtos</a>
+      <a mat-list-item routerLink="/categorias" routerLinkActive="active">Categorias</a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -11,9 +13,9 @@
     <mat-toolbar class="toolbar">
       <span class="spacer"></span>
       @if (auth.currentUser(); as user) {
-        <span class="user">
-          {{ user.name }} · {{ user.role === 'ADMIN' ? 'Administrador' : 'Utilizador' }}
-        </span>
+      <span class="user">
+        {{ user.name }} · {{ user.role === 'ADMIN' ? 'Administrador' : 'Utilizador' }}
+      </span>
       }
       <button mat-stroked-button (click)="auth.logout()">Sair</button>
     </mat-toolbar>

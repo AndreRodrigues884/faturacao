@@ -25,10 +25,20 @@ export const routes: Routes = [
       { path: 'inicio', component: Home },
     ],
   },
-        {
-        path: 'categorias',
-        loadComponent: () =>
-          import('./features/categories/category-list/category-list').then((m) => m.CategoryList),
-      },
+  {
+    path: 'categorias',
+    loadComponent: () =>
+      import('./features/categories/category-list/category-list').then((m) => m.CategoryList),
+  },
+  {
+    path: 'clientes',
+    loadComponent: () =>
+      import('./features/clients/client-list/client-list').then((m) => m.ClientList),
+  },
+  {
+    path: 'produtos',
+    loadComponent: () =>
+      import('./features/products/product-list/product-list').then((m) => m.ProductList),
+  },
   { path: '**', redirectTo: '' },
 ];
