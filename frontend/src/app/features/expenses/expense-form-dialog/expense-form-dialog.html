@@ -1,0 +1,109 @@
+<h2 mat-dialog-title>{{ expense ? 'Editar despesa' : 'Nova despesa' }}</h2>
+
+<mat-dialog-content>
+  <form id="expense-form" class="form-grid" [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Descrição</mat-label>
+      <input matInput formControlName="description" />
+      @if (form.controls.description.hasError('required')) {
+        <mat-error>A descrição é obrigatória</mat-error>
+      } @else if (form.controls.description.hasError('server')) {
+        <mat-error>{{ form.controls.description.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Categoria</mat-label>
+      <mat-select formControlName="categoryId">
+        @for (category of data.categories; track category.id) {
+          <mat-option [value]="category.id">{{ category.name }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.categoryId.hasError('required')) {
+        <mat-error>Escolha a categoria</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Data</mat-label>
+      <input matInput [matDatepicker]="datePicker" [max]="today" formControlName="expenseDate" />
+      <mat-datepicker-toggle matIconSuffix [for]="datePicker" />
+      <mat-datepicker #datePicker />
+      @if (form.controls.expenseDate.hasError('required')) {
+        <mat-error>A data é obrigatória</mat-error>
+      } @else if (form.controls.expenseDate.hasError('matDatepickerMax')) {
+        <mat-error>A data não pode ser no futuro</mat-error>
+      } @else if (form.controls.expenseDate.hasError('server')) {
+        <mat-error>{{ form.controls.expenseDate.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Total com IVA (€)</mat-label>
+      <input matInput type="number" step="0.01" min="0" formControlName="totalAmount" />
+      @if (form.controls.totalAmount.hasError('required')) {
+        <mat-error>O total é obrigatório</mat-error>
+      } @else if (form.controls.totalAmount.hasError('min')) {
+        <mat-error>Tem de ser maior que zero</mat-error>
+      } @else if (form.controls.totalAmount.hasError('server')) {
+        <mat-error>{{ form.controls.totalAmount.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>IVA (€)</mat-label>
+      <input matInput type="number" step="0.01" min="0" formControlName="vatAmount" />
+      @if (form.hasError('vatGreaterThanTotal')) {
+        <mat-hint class="hint-error">O IVA não pode ser maior do que o total</mat-hint>
+      } @else if (netCents() !== null) {
+        <mat-hint>Base sem IVA: {{ netCents()! / 100 | currency }}</mat-hint>
+      }
+      @if (form.controls.vatAmount.hasError('min')) {
+        <mat-error>Não pode ser negativo</mat-error>
+      } @else if (form.controls.vatAmount.hasError('server')) {
+        <mat-error>{{ form.controls.vatAmount.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Forma de pagamento</mat-label>
+      <mat-select formControlName="paymentMethod">
+        @for (option of paymentOptions; track option[0]) {
+          <mat-option [value]="option[0]">{{ option[1] }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.paymentMethod.hasError('required')) {
+        <mat-error>Escolha a forma de pagamento</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Fornecedor</mat-label>
+      <input matInput formControlName="supplierName" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>NIF do fornecedor</mat-label>
+      <input matInput formControlName="supplierNif" />
+      @if (form.controls.supplierNif.hasError('nif')) {
+        <mat-error>NIF inválido</mat-error>
+      } @else if (form.controls.supplierNif.hasError('server')) {
+        <mat-error>{{ form.controls.supplierNif.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Notas</mat-label>
+      <textarea matInput rows="2" formControlName="notes"></textarea>
+    </mat-form-field>
+  </form>
+
+  @if (errorMessage(); as message) {
+    <p class="error-message">{{ message }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="submit" form="expense-form" [disabled]="saving()">Guardar</button>
+</mat-dialog-actions>

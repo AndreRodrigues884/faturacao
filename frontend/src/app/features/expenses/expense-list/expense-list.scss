@@ -1,0 +1,35 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+table {
+  width: 100%;
+}
+
+.number {
+  text-align: right;
+}
+
+.supplier,
+.vat {
+  font-size: 12px;
+  color: #757575;
+}
+
+.actions {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.danger {
+  color: #c62828;
+}
+
+.empty {
+  padding: 16px;
+  color: #757575;
+}
