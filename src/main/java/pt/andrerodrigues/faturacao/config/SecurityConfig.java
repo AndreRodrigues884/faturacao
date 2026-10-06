@@ -58,6 +58,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/categories/**", "/api/clients/**", "/api/products/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/invoices/*/cancel").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/products/*/activate").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .oauth2ResourceServer(oauth -> oauth
                         .jwt(jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter()))
