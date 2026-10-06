@@ -40,15 +40,25 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./features/products/product-list/product-list').then((m) => m.ProductList),
   },
-  {
-    path: 'faturas',
-    loadComponent: () =>
-      import('./features/invoices/invoice-list/invoice-list').then((m) => m.InvoiceList),
-  },
-  {
-    path: 'faturas/:id',
-    loadComponent: () =>
-      import('./features/invoices/invoice-detail/invoice-detail').then((m) => m.InvoiceDetail),
-  },
+        {
+        path: 'faturas',
+        loadComponent: () =>
+          import('./features/invoices/invoice-list/invoice-list').then((m) => m.InvoiceList),
+      },
+      {
+        path: 'faturas/nova',
+        loadComponent: () =>
+          import('./features/invoices/invoice-form/invoice-form').then((m) => m.InvoiceForm),
+      },
+      {
+        path: 'faturas/:id',
+        loadComponent: () =>
+          import('./features/invoices/invoice-detail/invoice-detail').then((m) => m.InvoiceDetail),
+      },
+      {
+        path: 'faturas/:id/editar',
+        loadComponent: () =>
+          import('./features/invoices/invoice-form/invoice-form').then((m) => m.InvoiceForm),
+      },
   { path: '**', redirectTo: '' },
 ];

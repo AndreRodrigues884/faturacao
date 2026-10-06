@@ -1,0 +1,67 @@
+.section {
+  margin-bottom: 16px;
+}
+
+.header-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  column-gap: 16px;
+  padding-top: 8px;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.lines {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: 1fr 140px 120px auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.line-total {
+  text-align: right;
+  font-weight: 600;
+}
+
+.danger {
+  color: #c62828;
+}
+
+.totals {
+  margin: 16px 0 16px auto;
+  max-width: 320px;
+
+  div {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+  }
+
+  .grand-total {
+    border-top: 1px solid #e0e0e0;
+    margin-top: 4px;
+    padding-top: 8px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: #757575;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

@@ -12,8 +12,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { Subject, catchError, debounceTime, merge, of, startWith, switchMap, tap } from 'rxjs';
+
 
 import { errorMessage } from '../../../core/api/api-errors';
 import { PageResponse } from '../../../core/api/page';
@@ -37,6 +38,7 @@ import { InvoiceService } from '../invoice.service';
     CurrencyPipe,
     DatePipe,
     MatTableModule,
+    RouterLink,
     MatPaginatorModule,
     MatSortModule,
     MatFormFieldModule,
