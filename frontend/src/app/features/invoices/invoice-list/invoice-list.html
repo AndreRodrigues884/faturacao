@@ -1,0 +1,86 @@
+<div class="page-header">
+  <h1>Faturas</h1>
+</div>
+
+<form class="filters" [formGroup]="filters">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Número ou cliente</mat-label>
+    <input matInput formControlName="search" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Estado</mat-label>
+    <mat-select formControlName="status">
+      <mat-option [value]="null">Todos</mat-option>
+      @for (option of statusOptions; track option[0]) {
+        <mat-option [value]="option[0]">{{ option[1] }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Emitidas entre</mat-label>
+    <mat-date-range-input [rangePicker]="picker">
+      <input matStartDate formControlName="issuedFrom" placeholder="Início" />
+      <input matEndDate formControlName="issuedTo" placeholder="Fim" />
+    </mat-date-range-input>
+    <mat-datepicker-toggle matIconSuffix [for]="picker" />
+    <mat-date-range-picker #picker />
+  </mat-form-field>
+
+  <mat-slide-toggle formControlName="overdue">Só em atraso</mat-slide-toggle>
+
+  <button mat-button type="button" (click)="clearFilters()">Limpar filtros</button>
+</form>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<table mat-table [dataSource]="page()?.content ?? []" matSort (matSortChange)="onSort($event)">
+  <ng-container matColumnDef="number">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Número</th>
+    <td mat-cell *matCellDef="let invoice">{{ invoice.number ?? 'Rascunho #' + invoice.id }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="clientName">
+    <th mat-header-cell *matHeaderCellDef>Cliente</th>
+    <td mat-cell *matCellDef="let invoice">{{ invoice.clientName }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="issueDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Emissão</th>
+    <td mat-cell *matCellDef="let invoice">{{ (invoice.issueDate | date: 'dd/MM/yyyy') ?? '—' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="dueDate">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Vencimento</th>
+    <td mat-cell *matCellDef="let invoice">{{ invoice.dueDate | date: 'dd/MM/yyyy' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="total">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="number">Total</th>
+    <td mat-cell *matCellDef="let invoice" class="number">{{ invoice.total | currency }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>Estado</th>
+    <td mat-cell *matCellDef="let invoice">
+      <app-invoice-status-badge [status]="invoice.status" [daysOverdue]="invoice.daysOverdue" />
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns" class="clickable" (click)="open(row)"></tr>
+  <tr class="mat-mdc-row" *matNoDataRow>
+    <td class="mat-mdc-cell empty" [attr.colspan]="columns.length">Nenhuma fatura encontrada.</td>
+  </tr>
+</table>
+
+<mat-paginator
+  [length]="page()?.totalElements ?? 0"
+  [pageIndex]="pageIndex()"
+  [pageSize]="pageSize()"
+  [pageSizeOptions]="[10, 20, 50]"
+  (page)="onPage($event)"
+/>

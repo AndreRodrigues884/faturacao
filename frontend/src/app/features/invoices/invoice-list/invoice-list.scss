@@ -1,0 +1,28 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+table {
+  width: 100%;
+}
+
+.number {
+  text-align: right;
+}
+
+.clickable {
+  cursor: pointer;
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.03);
+  }
+}
+
+.empty {
+  padding: 16px;
+  color: #757575;
+}

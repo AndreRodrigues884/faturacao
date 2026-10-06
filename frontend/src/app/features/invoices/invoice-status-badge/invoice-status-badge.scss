@@ -1,0 +1,38 @@
+:host {
+  display: inline-flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.badge[data-status='DRAFT'] {
+  background: #eceff1;
+  color: #455a64;
+}
+
+.badge[data-status='ISSUED'] {
+  background: #e3f2fd;
+  color: #1565c0;
+}
+
+.badge[data-status='PAID'] {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge[data-status='CANCELLED'] {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.overdue {
+  background: #fff3e0;
+  color: #e65100;
+}

@@ -2,7 +2,9 @@
   <mat-sidenav mode="side" opened class="sidenav">
     <div class="brand">Faturação</div>
     <mat-nav-list>
-      <a mat-list-item routerLink="/inicio" routerLinkActive="active">Início</a>
+      <a mat-list-item routerLink="/inicio" routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }">Início</a>
+      <a mat-list-item routerLink="/faturas" routerLinkActive="active">Faturas</a>
       <a mat-list-item routerLink="/clientes" routerLinkActive="active">Clientes</a>
       <a mat-list-item routerLink="/produtos" routerLinkActive="active">Produtos</a>
       <a mat-list-item routerLink="/categorias" routerLinkActive="active">Categorias</a>
