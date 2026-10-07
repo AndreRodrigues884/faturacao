@@ -1,0 +1,71 @@
+<h2 mat-dialog-title>{{ client ? 'Editar cliente' : 'Novo cliente' }}</h2>
+
+<mat-dialog-content>
+  <form id="client-form" class="form-grid" [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" />
+      @if (form.controls.name.hasError('required')) {
+        <mat-error>O nome é obrigatório</mat-error>
+      } @else if (form.controls.name.hasError('server')) {
+        <mat-error>{{ form.controls.name.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>NIF</mat-label>
+      <input matInput formControlName="nif" />
+      @if (form.controls.nif.hasError('required')) {
+        <mat-error>O NIF é obrigatório</mat-error>
+      } @else if (form.controls.nif.hasError('nif')) {
+        <mat-error>NIF inválido</mat-error>
+      } @else if (form.controls.nif.hasError('server')) {
+        <mat-error>{{ form.controls.nif.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input matInput type="email" formControlName="email" />
+      @if (form.controls.email.hasError('email')) {
+        <mat-error>O email não é válido</mat-error>
+      } @else if (form.controls.email.hasError('server')) {
+        <mat-error>{{ form.controls.email.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Telefone</mat-label>
+      <input matInput formControlName="phone" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Código postal</mat-label>
+      <input matInput formControlName="postalCode" placeholder="0000-000" />
+      @if (form.controls.postalCode.hasError('pattern')) {
+        <mat-error>Formato 0000-000</mat-error>
+      } @else if (form.controls.postalCode.hasError('server')) {
+        <mat-error>{{ form.controls.postalCode.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Morada</mat-label>
+      <input matInput formControlName="address" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Cidade</mat-label>
+      <input matInput formControlName="city" />
+    </mat-form-field>
+  </form>
+
+  @if (errorMessage(); as message) {
+    <p class="error-message">{{ message }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="submit" form="client-form" [disabled]="saving()">Guardar</button>
+</mat-dialog-actions>

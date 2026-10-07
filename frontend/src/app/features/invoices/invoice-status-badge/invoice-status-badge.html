@@ -1,0 +1,4 @@
+<span class="badge" [attr.data-status]="status()">{{ label() }}</span>
+@if (daysOverdue() > 0) {
+  <span class="badge overdue">Em atraso há {{ daysOverdue() }} {{ daysOverdue() === 1 ? 'dia' : 'dias' }}</span>
+}

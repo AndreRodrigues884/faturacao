@@ -1,0 +1,14 @@
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+  padding-top: 8px;
+}
+
+.full {
+  grid-column: 1 / -1;
+}
+
+.hint-error {
+  color: #c62828;
+}

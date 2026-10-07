@@ -1,0 +1,60 @@
+<div class="page-header">
+  <h1>Utilizadores</h1>
+  <button mat-flat-button (click)="openForm()">Novo utilizador</button>
+</div>
+
+@if (loading()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+<table mat-table [dataSource]="users()">
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Nome</th>
+    <td mat-cell *matCellDef="let user">
+      {{ user.name }}
+      @if (isSelf(user)) {
+        <span class="badge">Eu</span>
+      }
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="email">
+    <th mat-header-cell *matHeaderCellDef>Email</th>
+    <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="role">
+    <th mat-header-cell *matHeaderCellDef>Papel</th>
+    <td mat-cell *matCellDef="let user">{{ roleLabel(user.role) }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Estado</th>
+    <td mat-cell *matCellDef="let user">
+      <span class="status" [class.inactive]="!user.active">{{ user.active ? 'Ativa' : 'Desativada' }}</span>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="createdAt">
+    <th mat-header-cell *matHeaderCellDef>Criada em</th>
+    <td mat-cell *matCellDef="let user">{{ user.createdAt | date: 'dd/MM/yyyy' }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let user" class="actions">
+      <button mat-button (click)="openForm(user)">Editar</button>
+      <button mat-button (click)="resetPassword(user)">Redefinir password</button>
+      @if (!isSelf(user)) {
+        @if (user.active) {
+          <button mat-button class="danger" (click)="deactivate(user)">Desativar</button>
+        } @else {
+          <button mat-button (click)="activate(user)">Reativar</button>
+        }
+      }
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="columns"></tr>
+  <tr mat-row *matRowDef="let row; columns: columns" [class.inactive-row]="!row.active"></tr>
+</table>

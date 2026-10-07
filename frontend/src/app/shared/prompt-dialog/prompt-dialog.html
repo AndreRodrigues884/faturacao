@@ -1,0 +1,21 @@
+<h2 mat-dialog-title>{{ data.title }}</h2>
+
+<mat-dialog-content>
+  @if (data.message) {
+    <p>{{ data.message }}</p>
+  }
+  <mat-form-field appearance="outline" class="field">
+    <mat-label>{{ data.label }}</mat-label>
+    <textarea matInput rows="3" [formControl]="text" (keydown.enter)="$event.preventDefault(); confirm()"></textarea>
+    @if (text.hasError('required')) {
+      <mat-error>Campo obrigatório</mat-error>
+    } @else if (text.hasError('maxlength')) {
+      <mat-error>Texto demasiado longo</mat-error>
+    }
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="button" (click)="confirm()">{{ data.confirmLabel ?? 'Confirmar' }}</button>
+</mat-dialog-actions>

@@ -1,0 +1,33 @@
+<mat-sidenav-container class="shell">
+  <mat-sidenav mode="side" opened class="sidenav">
+    <div class="brand">Faturação</div>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/inicio" routerLinkActive="active">Início</a>
+      <a mat-list-item routerLink="/faturas" routerLinkActive="active">Faturas</a>
+      <a mat-list-item routerLink="/despesas" routerLinkActive="active">Despesas</a>
+      <a mat-list-item routerLink="/clientes" routerLinkActive="active">Clientes</a>
+      <a mat-list-item routerLink="/produtos" routerLinkActive="active">Produtos</a>
+      <a mat-list-item routerLink="/categorias" routerLinkActive="active">Categorias</a>
+      @if (auth.isAdmin()) {
+        <a mat-list-item routerLink="/utilizadores" routerLinkActive="active">Utilizadores</a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="toolbar">
+      <span class="spacer"></span>
+      @if (auth.currentUser(); as user) {
+        <span class="user">
+          {{ user.name }} · {{ user.role === 'ADMIN' ? 'Administrador' : 'Utilizador' }}
+        </span>
+      }
+      <button mat-button (click)="changePassword()">Mudar password</button>
+      <button mat-stroked-button (click)="auth.logout()">Sair</button>
+    </mat-toolbar>
+
+    <main class="content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

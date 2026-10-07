@@ -1,0 +1,77 @@
+<h2 mat-dialog-title>{{ product ? 'Editar produto' : 'Novo produto' }}</h2>
+
+<mat-dialog-content>
+  <form id="product-form" class="form-grid" [formGroup]="form" (ngSubmit)="save()">
+    <mat-form-field appearance="outline">
+      <mat-label>Código</mat-label>
+      <input matInput formControlName="code" placeholder="SRV-001" />
+      @if (form.controls.code.hasError('required')) {
+        <mat-error>O código é obrigatório</mat-error>
+      } @else if (form.controls.code.hasError('pattern')) {
+        <mat-error>Só letras, números, hífen e underscore</mat-error>
+      } @else if (form.controls.code.hasError('server')) {
+        <mat-error>{{ form.controls.code.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Tipo</mat-label>
+      <mat-select formControlName="type">
+        @for (option of typeOptions; track option[0]) {
+          <mat-option [value]="option[0]">{{ option[1] }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.type.hasError('required')) {
+        <mat-error>Escolha o tipo</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" />
+      @if (form.controls.name.hasError('required')) {
+        <mat-error>O nome é obrigatório</mat-error>
+      } @else if (form.controls.name.hasError('server')) {
+        <mat-error>{{ form.controls.name.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Preço sem IVA (€)</mat-label>
+      <input matInput type="number" step="0.01" min="0" formControlName="unitPrice" />
+      @if (form.controls.unitPrice.hasError('required')) {
+        <mat-error>O preço é obrigatório</mat-error>
+      } @else if (form.controls.unitPrice.hasError('min')) {
+        <mat-error>O preço não pode ser negativo</mat-error>
+      } @else if (form.controls.unitPrice.hasError('server')) {
+        <mat-error>{{ form.controls.unitPrice.getError('server') }}</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Taxa de IVA</mat-label>
+      <mat-select formControlName="vatRate">
+        @for (option of vatRateOptions; track option[0]) {
+          <mat-option [value]="option[0]">{{ option[1] }}</mat-option>
+        }
+      </mat-select>
+      @if (form.controls.vatRate.hasError('required')) {
+        <mat-error>Escolha a taxa de IVA</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full">
+      <mat-label>Descrição</mat-label>
+      <textarea matInput rows="2" formControlName="description"></textarea>
+    </mat-form-field>
+  </form>
+
+  @if (errorMessage(); as message) {
+    <p class="error-message">{{ message }}</p>
+  }
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button type="button" mat-dialog-close>Cancelar</button>
+  <button mat-flat-button type="submit" form="product-form" [disabled]="saving()">Guardar</button>
+</mat-dialog-actions>
