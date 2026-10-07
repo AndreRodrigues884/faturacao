@@ -1,4 +1,4 @@
-# Faturação
+# Saldo
 
 **Invoicing and expense management system for small businesses**, with a Spring Boot API, an Angular frontend and PostgreSQL. The whole system starts with a single Docker command.
 
@@ -13,24 +13,43 @@
 
 ---
 
-## Table of contents
+## Demo video
 
-- [Features](#features)
-- [Technical highlights](#technical-highlights)
-- [Architecture](#architecture)
-- [Try it in 2 minutes (Docker)](#try-it-in-2-minutes-docker)
-- [Local development](#local-development)
-- [Tests](#tests)
-- [API](#api)
-- [Project structure](#project-structure)
-- [Roadmap](#roadmap)
-- [Author](#author)
+<!-- Replace the line below with the link GitHub generates when you drag saldo.mp4 into the editor -->
+https://github.com/user-attachments/assets/REPLACE-WITH-VIDEO-ID
+
+If the player does not load, the video is also available in the repository: [`src/assets/video/saldo.mp4`](src/assets/video/saldo.mp4).
+
+## Overview
+
+### The problem
+
+Small service companies (consultancies, agencies, clinics, training centres) usually keep their finances spread across different places: invoices in one tool, expenses in a spreadsheet, and a vague idea of how much clients still owe. Answering a simple question such as *"are we making money this year?"* means collecting numbers by hand.
+
+**Saldo** brings that information together. A company with 5 to 20 people can manage its clients and catalogue, create and issue invoices, record expenses, and see on a single dashboard how much it billed, how much it spent, what the result is, and which invoices are overdue. The name comes from the Portuguese word for *balance*: what is left once expenses are taken from revenue.
+
+### What you can do
+
+- **Bill clients.** Create invoice drafts with as many lines as needed, choosing products or services and quantities. VAT is calculated per line at the right rate (23%, 13% or 6%) and the totals update as you type. When the draft is ready, it is issued with the next number in the series, such as `FT 2026/0042`.
+- **Follow every invoice through its lifecycle.** An issued invoice can be marked as paid or cancelled with a reason, and is never edited or deleted afterwards. Invoices that pass their due date are flagged as overdue, with the number of days late.
+- **Record expenses** from the supplier's receipt or invoice, by category and payment method, with the base amount and VAT kept separately.
+- **Keep a catalogue** of clients (with Portuguese VAT number validation), products and services with their VAT rates, and expense categories. Products that leave the catalogue are deactivated rather than deleted, so past invoices stay intact.
+- **See the business at a glance** on a dashboard with yearly revenue, expenses and result, outstanding and overdue amounts, a month-by-month chart, expenses by category, and the most overdue invoices.
+- **Work as a team** with two roles: users handle day-to-day work, while admins can also cancel invoices, delete records and manage accounts.
+
+A **demo account** comes with a fictional company and twelve months of activity (around 70 invoices in every state and more than 100 expenses), so the system can be explored without entering any data.
+
+### How it is built
+
+The backend is a **Spring Boot 4** REST API on **Java 21**, organised by feature, with business rules kept inside the domain entities rather than in controllers. Data lives in **PostgreSQL**, with the schema versioned through **Flyway** migrations and protected by database constraints. The frontend is an **Angular 22** single-page application using signals, reactive forms and Angular Material. Authentication uses **JWT** with BCrypt-hashed passwords and role-based access rules.
+
+The project pays particular attention to the problems that make invoicing software hard to get right: **concurrency** (two people issuing invoices at the same moment must never get the same number), **money** (exact decimal arithmetic and correct rounding), **immutability** (issued documents cannot change, and invoices keep a snapshot of product and client data), and **data integrity** (rules enforced both in the code and in the database).
+
+Everything is covered by a three-level test suite (fast unit tests, integration tests against a real PostgreSQL started by Testcontainers, and HTTP-level API tests) and packaged with **Docker**: multi-stage images for the backend and the frontend, nginx as a reverse proxy, and a Compose file that starts the whole system with one command.
 
 ---
 
 ## Features
-
-Built for a service company with 5 to 20 people that wants to track what it bills and what it spends in one place, and see month by month whether it is making money.
 
 | Area | Features |
 |---|---|
@@ -39,45 +58,7 @@ Built for a service company with 5 to 20 people that wants to track what it bill
 | **Catalogue** | Clients (with Portuguese VAT number check-digit validation), products and services with VAT rates (23%, 13%, 6%), categories |
 | **Dashboard** | Yearly revenue, expenses and result, receivables, monthly chart, expenses by category and most overdue invoices |
 | **Users** | JWT authentication, **Admin** and **User** roles, account management, password change and reset |
-
----
-
-## Technical highlights
-
-### Gapless sequential numbering under concurrency
-Two simultaneous issue requests never get the same number, and a failed issue never leaves a gap in the series.
-- **Pessimistic lock** (`SELECT ... FOR UPDATE`) on the series counter: concurrent requests are queued.
-- **Optimistic lock** (`@Version`) on the invoice: a double click on *Issue* is rejected instead of consuming two numbers.
-- Numbering and issuing run in the **same transaction** (`Propagation.MANDATORY`): if issuing fails, the rollback returns the number to the counter.
-- Proven by an **integration test with 20 simultaneous issue requests** against a real PostgreSQL database.
-
-### Rich domain model
-Business rules live in the entities, not in the controllers: an issued invoice cannot be changed or deleted, regardless of where the request comes from. The lifecycle (`DRAFT → ISSUED → PAID / CANCELLED`) only moves forward through intention-revealing methods, never through a `setStatus`.
-
-### Money handled with care
-- `BigDecimal` and `NUMERIC(12,2)` across the backend, with explicit `HALF_UP` rounding.
-- VAT calculated **per line**, not per unit, as in real documents.
-- Invoice lines store a **snapshot** of the product (price, VAT rate, description): changing a product never changes past invoices. The same applies to the client's details at issue time.
-- In the frontend, the totals preview uses **integer cents** to avoid JavaScript floating-point errors.
-
-### Layered security
-- Signed JWT (HS256), **BCrypt** password hashing, secrets kept out of the code (environment variables).
-- Access rules centralised in the `SecurityFilterChain`: destructive and tax-relevant operations are restricted to admins.
-- **401 / 403** responses in the same `ProblemDetail` format (RFC 9457) as every other API error.
-- A single login error message for unknown emails and wrong passwords, so the API does not reveal which accounts exist.
-
-### Performance and data integrity
-- `@EntityGraph` to avoid the **N+1 problem**, and `open-in-view` disabled.
-- **Dynamic filters** with Specifications, pagination with a maximum page size, and sorting restricted to an allow-list.
-- Dashboard **aggregations** (`SUM`, `COUNT`, `GROUP BY`) computed by the database, with indexes on the queried columns.
-- **Versioned migrations** with Flyway, and rules also enforced by constraints (`UNIQUE`, `CHECK`, foreign keys).
-
-### Modern frontend
-- Angular 22 with standalone components, **signals**, `httpResource` and per-page lazy loading.
-- An interceptor attaches the token to every request and ends the session on a 401.
-- Reactive forms with `FormArray` and cross-field validators; backend validation errors are shown **on the exact field** (including `lines[0].quantity`).
-
----
+| **Demo** | Optional `demo` profile with a sample company, twelve months of data and a one-click demo login |
 
 ## Architecture
 
@@ -129,38 +110,13 @@ Fill in `JWT_SECRET` (48 random bytes, Base64-encoded) and `ADMIN_PASSWORD` in `
 docker compose up -d --build
 ```
 
-Open **http://localhost:4000** and sign in with the `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env`.
-
-On the first run, the database is created from the migrations with sample data (clients, products, categories and expenses), together with the first admin account.
+Open **http://localhost:4000** and click **"Entrar com a conta de demonstração"** to explore the sample company, or sign in as admin with the `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env`.
 
 | Service | Address |
 |---|---|
 | Application | http://localhost:4000 |
 | API | http://localhost:8080/api |
 | PostgreSQL | `localhost:5433` (user and password `faturacao`) |
-
----
-
-## Local development
-
-Requirements: **JDK 21**, **Node.js 24 LTS** and **Docker**.
-
-```bash
-# 1. Database
-docker compose up -d db
-
-# 2. Backend (port 8080)
-./mvnw spring-boot:run
-
-# 3. Frontend (port 4200, proxying /api to the backend)
-cd frontend
-npm install
-npx ng serve
-```
-
-Open **http://localhost:4200**. In development, the admin account is created with the default values from `application.yml`.
-
----
 
 ## Tests
 
@@ -192,6 +148,7 @@ Every endpoint except login requires `Authorization: Bearer <token>`. A Postman 
 | Categories | `GET /api/categories` · `POST` · `GET/PUT/DELETE /{id}` |
 | Users *(admin)* | `GET /api/users` · `POST` · `PUT /{id}` · `POST /{id}/deactivate` · `POST /{id}/activate` · `POST /{id}/reset-password` |
 | Dashboard | `GET /api/dashboard?year=` |
+| Demo *(demo profile only)* | `GET /api/demo/credentials` |
 
 Errors always follow the `ProblemDetail` format:
 
@@ -222,7 +179,8 @@ faturacao/
 │   ├── product/       products, VAT rates
 │   ├── invoice/       invoices: domain/, dto/, numbering/
 │   ├── expense/       expenses
-│   └── dashboard/     dashboard aggregations
+│   ├── dashboard/     dashboard aggregations
+│   └── demo/          sample company and demo login (demo profile only)
 ├── src/main/resources/db/migration/   Flyway migrations (V1 to V12)
 ├── src/test/                          unit, integration and API tests
 ├── frontend/                          Angular application
@@ -237,17 +195,18 @@ faturacao/
 
 ---
 
-## Roadmap
+## What I learned
 
-- [ ] Online deployment with HTTPS
-- [ ] Invoice PDF export
-- [ ] Credit notes to correct paid invoices
-- [ ] Audit trail (who created or changed what)
-- [ ] Automatic overdue reminders (`@Scheduled` + email)
-- [ ] Expense entry from the receipt's QR code
-- [ ] Continuous integration with GitHub Actions
+This was my first project with Spring Boot and Angular, built to learn both properly rather than to follow a tutorial. Along the way I worked through:
 
----
+- Designing a **layered backend** and deciding where each rule belongs, and why business rules are safer inside the entities than in controllers.
+- **Transactions and locking** in practice: reproducing a race condition in a test before fixing it, and understanding when to use pessimistic or optimistic locking.
+- The pitfalls of **money and dates**: floating-point errors, rounding modes, and time zones that turn the 15th into the 14th.
+- **JPA beyond the basics**: lazy loading, the N+1 problem, dirty checking, and when to drop down to the `EntityManager` for aggregations.
+- **Security** end to end, from password hashing and JWT validation to the difference between authentication (401) and authorisation (403), and why frontend guards are not security.
+- **Testing at three levels** and choosing what each level should prove.
+- Shipping software that **anyone can run**, with Docker images, environment-based configuration and secrets kept out of the code.
+
 
 ## Author
 
