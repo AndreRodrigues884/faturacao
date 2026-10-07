@@ -1,38 +1,17 @@
-mat-slide-toggle {
-  display: block;
-  margin-bottom: 12px;
-}
-
-table {
-  width: 100%;
-}
-
-.number {
-  text-align: right;
-}
-
-.actions {
-  text-align: right;
-  white-space: nowrap;
-}
-
-.danger {
-  color: #c62828;
-}
-
-.inactive {
-  opacity: 0.55;
-}
-
-.badge {
-  margin-left: 8px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: #eeeeee;
+.code {
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: var(--app-surface-muted);
+  border: 1px solid var(--app-border);
   font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--app-text-muted);
 }
 
-.empty {
-  padding: 16px;
-  color: #757575;
+.inactive-tag {
+  margin-left: 8px;
+}
+
+.inactive .mat-mdc-cell:not(.actions) {
+  opacity: 0.55;
 }

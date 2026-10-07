@@ -1,42 +1,72 @@
 <div class="login-page">
-  <mat-card class="login-card" appearance="outlined">
-    <mat-card-header>
-      <mat-card-title>Faturação</mat-card-title>
-      <mat-card-subtitle>Entre com a sua conta</mat-card-subtitle>
-    </mat-card-header>
+  <aside class="brand-panel">
+    <div class="brand">
+      <span class="brand-mark">
+        <span class="material-symbols-outlined">account_balance</span>
+      </span>
+      <span class="brand-name">Faturação</span>
+    </div>
 
-    <mat-card-content>
-      <form [formGroup]="form" (ngSubmit)="submit()">
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput type="email" formControlName="email" autocomplete="username" />
-          @if (form.controls.email.hasError('required')) {
-            <mat-error>O email é obrigatório</mat-error>
-          } @else if (form.controls.email.hasError('email')) {
-            <mat-error>O email não é válido</mat-error>
+    <div class="brand-copy">
+      <h2>Gestão financeira clara e segura.</h2>
+      <p>Faturas, despesas e clientes num só lugar, com controlo de acessos por perfil.</p>
+    </div>
+
+    <ul class="brand-points">
+      <li><span class="material-symbols-outlined">verified_user</span> Acesso autenticado</li>
+      <li><span class="material-symbols-outlined">receipt_long</span> Faturação e cobranças</li>
+      <li><span class="material-symbols-outlined">monitoring</span> Indicadores em tempo real</li>
+    </ul>
+  </aside>
+
+  <section class="form-panel">
+    <mat-card class="login-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>Iniciar sessão</mat-card-title>
+        <mat-card-subtitle>Entre com as credenciais da sua conta</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput type="email" formControlName="email" autocomplete="username" />
+            @if (form.controls.email.hasError('required')) {
+              <mat-error>O email é obrigatório</mat-error>
+            } @else if (form.controls.email.hasError('email')) {
+              <mat-error>O email não é válido</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Password</mat-label>
+            <input matInput type="password" formControlName="password" autocomplete="current-password" />
+            @if (form.controls.password.hasError('required')) {
+              <mat-error>A password é obrigatória</mat-error>
+            }
+          </mat-form-field>
+
+          @if (errorMessage(); as message) {
+            <p class="error-message">
+              <span class="material-symbols-outlined">error</span>
+              {{ message }}
+            </p>
           }
-        </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Password</mat-label>
-          <input matInput type="password" formControlName="password" autocomplete="current-password" />
-          @if (form.controls.password.hasError('required')) {
-            <mat-error>A password é obrigatória</mat-error>
-          }
-        </mat-form-field>
+          <button mat-flat-button type="submit" [disabled]="loading()">
+            @if (loading()) {
+              <mat-spinner diameter="20" />
+            } @else {
+              Entrar
+            }
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
 
-        @if (errorMessage(); as message) {
-          <p class="error-message">{{ message }}</p>
-        }
-
-        <button mat-flat-button type="submit" [disabled]="loading()">
-          @if (loading()) {
-            <mat-spinner diameter="20" />
-          } @else {
-            Entrar
-          }
-        </button>
-      </form>
-    </mat-card-content>
-  </mat-card>
+    <p class="footnote">
+      <span class="material-symbols-outlined">lock</span>
+      Ligação protegida. Não partilhe as suas credenciais.
+    </p>
+  </section>
 </div>

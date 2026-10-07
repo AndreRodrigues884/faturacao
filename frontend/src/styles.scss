@@ -1,54 +1,553 @@
-// Include theming for Angular Material with `mat.theme()`.
-// This Sass mixin will define CSS variables that are used for styling Angular Material
-// components according to the Material 3 design spec.
-// Learn more about theming and how to use it for your application's
-// custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
+
+// ---------------------------------------------------------------------------
+// Design tokens — paleta sóbria (navy / slate) para contexto financeiro.
+// ---------------------------------------------------------------------------
+:root {
+  --app-font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+
+  --app-bg: #f4f6f9;
+  --app-surface: #ffffff;
+  --app-surface-muted: #f8fafc;
+  --app-border: #e3e8ef;
+  --app-border-strong: #cdd5df;
+
+  --app-text: #0f1b2d;
+  --app-text-muted: #526075;
+  --app-text-subtle: #8693a6;
+
+  --app-primary: #12305b;
+  --app-primary-hover: #0d2547;
+  --app-primary-soft: #eaf0f8;
+  --app-accent: #2f6fd1;
+
+  --app-sidebar: #0b1f3a;
+  --app-sidebar-text: #a9b6c9;
+  --app-sidebar-active: rgba(255, 255, 255, 0.08);
+
+  --app-success: #0f7b4b;
+  --app-success-soft: #e6f4ec;
+  --app-danger: #b42318;
+  --app-danger-soft: #fdecea;
+  --app-warning: #b54708;
+  --app-warning-soft: #fef3e2;
+  --app-info: #1d4ed8;
+  --app-info-soft: #eaf1ff;
+  --app-neutral-soft: #eef1f5;
+
+  --app-radius-sm: 6px;
+  --app-radius: 10px;
+  --app-radius-lg: 14px;
+  --app-shadow-sm: 0 1px 2px rgba(15, 27, 45, 0.04);
+  --app-shadow: 0 1px 3px rgba(15, 27, 45, 0.06), 0 1px 2px rgba(15, 27, 45, 0.04);
+}
 
 html {
   height: 100%;
   @include mat.theme(
     (
       color: (
-        primary: mat.$azure-palette,
-        tertiary: mat.$blue-palette,
+        primary: mat.$blue-palette,
+        tertiary: mat.$azure-palette,
       ),
-      typography: Roboto,
-      density: 0,
+      typography: (
+        plain-family: var(--app-font),
+        brand-family: var(--app-font),
+        bold-weight: 600,
+        medium-weight: 500,
+        regular-weight: 400,
+      ),
+      density: -1,
+    )
+  );
+
+  @include mat.theme-overrides(
+    (
+      primary: var(--app-primary),
+      on-primary: #ffffff,
+      primary-container: var(--app-primary-soft),
+      on-primary-container: var(--app-primary),
+      surface: var(--app-surface),
+      surface-container: var(--app-surface),
+      surface-container-low: var(--app-surface),
+      surface-container-high: var(--app-surface),
+      surface-container-highest: var(--app-surface-muted),
+      on-surface: var(--app-text),
+      on-surface-variant: var(--app-text-muted),
+      outline: var(--app-border-strong),
+      outline-variant: var(--app-border),
+      error: var(--app-danger),
+    )
+  );
+
+  @include mat.button-overrides(
+    (
+      filled-container-shape: var(--app-radius-sm),
+      outlined-container-shape: var(--app-radius-sm),
+      text-container-shape: var(--app-radius-sm),
+      protected-container-shape: var(--app-radius-sm),
+      tonal-container-shape: var(--app-radius-sm),
+      filled-label-text-weight: 600,
+      outlined-label-text-weight: 600,
+      text-label-text-weight: 600,
+      outlined-outline-color: var(--app-border-strong),
+      filled-label-text-tracking: 0,
+      outlined-label-text-tracking: 0,
+      text-label-text-tracking: 0,
+    )
+  );
+
+  @include mat.card-overrides(
+    (
+      outlined-container-shape: var(--app-radius),
+      outlined-outline-color: var(--app-border),
+      outlined-container-color: var(--app-surface),
+      title-text-weight: 600,
+    )
+  );
+
+  @include mat.table-overrides(
+    (
+      background-color: var(--app-surface),
+      header-headline-color: var(--app-text-muted),
+      header-headline-weight: 600,
+      header-headline-size: 12px,
+      header-headline-tracking: 0.04em,
+      header-container-height: 44px,
+      row-item-container-height: 52px,
+      row-item-outline-color: var(--app-border),
+      row-item-label-text-size: 14px,
+    )
+  );
+
+  @include mat.dialog-overrides(
+    (
+      container-shape: var(--app-radius-lg),
+      container-color: var(--app-surface),
+      subhead-weight: 600,
+      subhead-size: 18px,
+      supporting-text-color: var(--app-text-muted),
+    )
+  );
+
+  @include mat.form-field-overrides(
+    (
+      outlined-container-shape: var(--app-radius-sm),
+      outlined-outline-color: var(--app-border-strong),
+      outlined-hover-outline-color: var(--app-text-subtle),
+      outlined-focus-outline-width: 1.5px,
+    )
+  );
+
+  @include mat.paginator-overrides(
+    (
+      container-background-color: transparent,
+      container-text-color: var(--app-text-muted),
+    )
+  );
+
+  @include mat.progress-bar-overrides(
+    (
+      active-indicator-color: var(--app-accent),
+      track-color: var(--app-primary-soft),
+      active-indicator-height: 3px,
+      track-height: 3px,
+    )
+  );
+
+  @include mat.sidenav-overrides(
+    (
+      container-shape: 0,
+      container-background-color: var(--app-sidebar),
+      container-text-color: var(--app-sidebar-text),
+      container-divider-color: transparent,
+      content-background-color: var(--app-bg),
+    )
+  );
+
+  @include mat.select-overrides(
+    (
+      container-elevation-shadow: 0 8px 24px rgba(15, 27, 45, 0.12),
     )
   );
 }
 
 body {
-  // Default the application to a light color theme. This can be changed to
-  // `dark` to enable the dark color theme, or to `light dark` to defer to the
-  // user's system settings.
   color-scheme: light;
-
-  // Set a default background, font and text colors for the application using
-  // Angular Material's system-level CSS variables. Learn more about these
-  // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
+  background-color: var(--app-bg);
+  color: var(--app-text);
   font: var(--mat-sys-body-medium);
-
-  // Reset the user agent margin.
+  font-family: var(--app-font);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   margin: 0;
   height: 100%;
 }
-/* You can add global styles to this file, and also import other style files */
 
+h1,
+h2,
+h3 {
+  color: var(--app-text);
+  letter-spacing: -0.01em;
+}
+
+// Ícones (Material Symbols via fonte, sem módulo Angular).
+.material-symbols-outlined {
+  font-size: 20px;
+  line-height: 1;
+  vertical-align: middle;
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+  user-select: none;
+}
+
+// ---------------------------------------------------------------------------
+// Layout de páginas
+// ---------------------------------------------------------------------------
 .page-header {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 16px;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
 
   h1 {
     margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.25;
+  }
+
+  .page-subtitle {
+    margin: 4px 0 0;
+    color: var(--app-text-muted);
+    font-size: 14px;
+  }
+
+  .page-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 }
 
+.eyebrow {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--app-text-subtle);
+}
+
+.back-link.mat-mdc-button {
+  margin: 0 0 12px -12px;
+  color: var(--app-text-muted);
+
+  .material-symbols-outlined {
+    font-size: 18px;
+    margin-right: 4px;
+  }
+}
+
+// Botões com ícone
+.mat-mdc-button-base .material-symbols-outlined {
+  font-size: 18px;
+  margin-right: 6px;
+  margin-left: -4px;
+}
+
+// Contentor neutro tipo "painel" (tabelas, filtros, secções)
+.panel {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius);
+  box-shadow: var(--app-shadow-sm);
+  overflow: hidden;
+  position: relative;
+
+  > .mat-mdc-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+  }
+
+  > .mat-mdc-paginator {
+    border-top: 1px solid var(--app-border);
+  }
+}
+
+.panel-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  border-bottom: 1px solid var(--app-border);
+}
+
+// Tabelas
+.mat-mdc-table {
+  width: 100%;
+
+  .mat-mdc-header-row {
+    background: var(--app-surface-muted);
+  }
+
+  .mat-mdc-header-cell {
+    text-transform: uppercase;
+  }
+
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
+    padding: 0 16px;
+  }
+
+  .mat-mdc-row {
+    transition: background-color 120ms ease;
+  }
+
+  .mat-mdc-row:not(.no-data):hover {
+    background: var(--app-surface-muted);
+  }
+
+  .mat-mdc-row:last-child .mat-mdc-cell {
+    border-bottom: none;
+  }
+}
+
+.number {
+  text-align: right !important;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+
+  &.mat-mdc-header-cell .mat-sort-header-container {
+    justify-content: flex-end;
+  }
+}
+
+.mono {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+.cell-primary {
+  font-weight: 500;
+  color: var(--app-text);
+}
+
+.muted {
+  color: var(--app-text-muted);
+}
+
+.cell-secondary {
+  margin-top: 2px;
+  font-size: 12px;
+  color: var(--app-text-subtle);
+}
+
+.actions {
+  text-align: right;
+  white-space: nowrap;
+
+  .mat-mdc-button {
+    min-width: 0;
+    padding: 0 10px;
+    color: var(--app-text-muted);
+  }
+}
+
+.mat-mdc-button-base.danger {
+  --mat-button-text-label-text-color: var(--app-danger);
+  --mat-button-text-state-layer-color: var(--app-danger);
+  --mat-button-text-ripple-color: rgba(180, 35, 24, 0.12);
+  --mat-button-outlined-label-text-color: var(--app-danger);
+  color: var(--app-danger);
+}
+
+// Campos mais compactos em barras de filtros e cabeçalhos
+.panel-toolbar,
+.page-header {
+  @include mat.form-field-density(-3);
+  @include mat.select-density(-3);
+}
+
+.mat-mdc-paginator {
+  @include mat.form-field-density(-5);
+}
+
+.empty {
+  padding: 40px 16px !important;
+  text-align: center;
+  color: var(--app-text-subtle);
+}
+
+// Etiquetas (pills)
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+  background: var(--app-neutral-soft);
+  color: var(--app-text-muted);
+  vertical-align: middle;
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.8;
+  }
+
+  &.plain::before {
+    display: none;
+  }
+
+  &.success {
+    background: var(--app-success-soft);
+    color: var(--app-success);
+  }
+
+  &.danger {
+    background: var(--app-danger-soft);
+    color: var(--app-danger);
+  }
+
+  &.warning {
+    background: var(--app-warning-soft);
+    color: var(--app-warning);
+  }
+
+  &.info {
+    background: var(--app-info-soft);
+    color: var(--app-info);
+  }
+}
+
+// Filtros
+.filters {
+  .mat-mdc-form-field {
+    flex: 0 1 180px;
+    min-width: 150px;
+  }
+
+  .mat-mdc-form-field:has(.mat-date-range-input) {
+    flex-basis: 230px;
+  }
+
+  .grow {
+    flex: 1 1 220px;
+  }
+
+  .clear {
+    margin-left: auto;
+    color: var(--app-text-muted);
+  }
+}
+
+.search-icon {
+  margin: 0 4px 0 12px;
+  color: var(--app-text-subtle);
+}
+
+// Mensagens
 .error-message {
-  color: #c62828;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  padding: 10px 12px;
+  border-radius: var(--app-radius-sm);
+  background: var(--app-danger-soft);
+  color: var(--app-danger);
+  font-size: 13px;
+}
+
+.hint-error {
+  color: var(--app-danger);
+}
+
+// Diálogos
+.mat-mdc-dialog-container {
+  .mat-mdc-dialog-title {
+    padding-top: 20px;
+  }
+
+  .mat-mdc-dialog-actions {
+    padding: 12px 24px 20px;
+    gap: 8px;
+    border-top: 1px solid var(--app-border);
+  }
+}
+
+// Formulários em grelha (diálogos)
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+  padding-top: 8px;
+
+  .full {
+    grid-column: 1 / -1;
+  }
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+// Totais (fatura)
+.totals {
+  margin-left: auto;
+  width: 100%;
+  max-width: 340px;
+  font-variant-numeric: tabular-nums;
+
+  > div {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    color: var(--app-text-muted);
+
+    span:last-child {
+      color: var(--app-text);
+    }
+  }
+
+  .grand-total {
+    border-top: 1px solid var(--app-border);
+    margin-top: 6px;
+    padding-top: 12px;
+    font-size: 18px;
+    font-weight: 600;
+
+    span:first-child {
+      color: var(--app-text);
+    }
+  }
+}
+
+// Snackbars
+.mat-mdc-snack-bar-container {
+  --mat-snack-bar-container-shape: var(--app-radius-sm);
+  --mat-snack-bar-container-color: var(--app-text);
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }

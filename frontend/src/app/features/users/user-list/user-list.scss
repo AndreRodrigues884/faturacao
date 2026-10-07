@@ -1,34 +1,23 @@
-table {
-  width: 100%;
+.identity {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.actions {
-  text-align: right;
-  white-space: nowrap;
-}
-
-.danger {
-  color: #c62828;
-}
-
-.badge {
-  margin-left: 8px;
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: #e3f2fd;
-  color: #1565c0;
-  font-size: 12px;
-}
-
-.status {
-  color: #2e7d32;
+.avatar {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+  font-size: 13px;
   font-weight: 600;
-
-  &.inactive {
-    color: #757575;
-  }
+  text-transform: uppercase;
 }
 
-.inactive-row {
-  opacity: 0.6;
+.inactive-row .mat-mdc-cell:not(.actions) {
+  opacity: 0.55;
 }

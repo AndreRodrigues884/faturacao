@@ -2,84 +2,166 @@
   width: 120px;
 }
 
+.loading {
+  margin-bottom: 16px;
+}
+
 .kpis {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 .kpi {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 16px;
+  gap: 6px;
+  padding: 18px 20px;
+  box-shadow: var(--app-shadow-sm);
 }
 
 .kpi-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
-  color: #616161;
+  font-weight: 500;
+  color: var(--app-text-muted);
+}
+
+.kpi-icon {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  font-size: 17px;
+  background: var(--app-primary-soft);
+  color: var(--app-primary);
+
+  &.revenue {
+    background: var(--app-success-soft);
+    color: var(--app-success);
+  }
+
+  &.expense,
+  &.warn {
+    background: var(--app-warning-soft);
+    color: var(--app-warning);
+  }
 }
 
 .kpi-value {
+  margin-top: 6px;
   font-size: 24px;
-  font-weight: 700;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+
+  &.positive {
+    color: var(--app-success);
+  }
 
   &.negative {
-    color: #c62828;
+    color: var(--app-danger);
   }
 }
 
 .kpi-hint {
   font-size: 12px;
-  color: #9e9e9e;
+  color: var(--app-text-subtle);
 }
 
 .kpi.alert {
-  border-color: #ef6c00;
+  border-color: #f4c790;
+  background: linear-gradient(180deg, var(--app-warning-soft), var(--app-surface) 60%);
 
   .kpi-value {
-    color: #e65100;
+    color: var(--app-warning);
   }
 }
 
 .section {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  box-shadow: var(--app-shadow-sm);
+}
+
+.section-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 4px;
 
   h2 {
-    margin: 0 0 16px;
-    font-size: 16px;
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+  }
+}
+
+.section-meta {
+  font-size: 12px;
+  color: var(--app-text-subtle);
+}
+
+.section-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--app-accent);
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.mat-mdc-card-content {
+  padding: 12px 20px 20px;
+
+  &.flush {
+    padding: 4px 0 8px;
   }
 }
 
 .two-columns {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 20px;
+
+  .section {
+    margin-bottom: 0;
+  }
 }
 
 .category {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .category-header {
   display: flex;
   justify-content: space-between;
-  font-size: 14px;
-  margin-bottom: 4px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.amount {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
 }
 
 .bar {
-  height: 8px;
-  background: #eeeeee;
-  border-radius: 4px;
+  height: 6px;
+  background: var(--app-neutral-soft);
+  border-radius: 3px;
   overflow: hidden;
 }
 
 .bar-fill {
   height: 100%;
-  background: #1e88e5;
-  border-radius: 4px;
+  background: linear-gradient(90deg, var(--app-primary), var(--app-accent));
+  border-radius: 3px;
 }
 
 .overdue-row {
@@ -87,13 +169,18 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  padding: 10px 0;
-  border-bottom: 1px solid #eeeeee;
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--app-border);
   color: inherit;
   text-decoration: none;
+  transition: background-color 120ms ease;
+
+  &:last-child {
+    border-bottom: none;
+  }
 
   &:hover {
-    background: rgba(0, 0, 0, 0.03);
+    background: var(--app-surface-muted);
   }
 }
 
@@ -105,14 +192,19 @@
 }
 
 .strong {
-  font-weight: 600;
+  font-weight: 500;
 }
 
-.muted {
+.hint {
   font-size: 12px;
-  color: #757575;
+  color: var(--app-text-subtle);
 }
 
 .empty {
-  color: #757575;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0;
+  padding: 24px 16px !important;
 }

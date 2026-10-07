@@ -1,8 +1,16 @@
-<h1>Olá, {{ auth.currentUser()?.name }}</h1>
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Início</span>
+    <h1>Olá, {{ auth.currentUser()?.name }}</h1>
+  </div>
+</div>
 
 <mat-card appearance="outlined" class="card">
   <mat-card-content>
-    <p>Categorias registadas: <strong>{{ categories().length }}</strong></p>
+    <div class="stat">
+      <span class="material-symbols-outlined">sell</span>
+      <span>Categorias registadas: <strong>{{ categories().length }}</strong></span>
+    </div>
     @if (auth.isAdmin()) {
       <p>Tem acesso de administrador: pode anular faturas, apagar registos e gerir utilizadores.</p>
     } @else {
