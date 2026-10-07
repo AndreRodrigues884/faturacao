@@ -15,39 +15,8 @@
 
 ## Demo video
 
-<!-- Replace the line below with the link GitHub generates when you drag saldo.mp4 into the editor -->
-https://github.com/user-attachments/assets/REPLACE-WITH-VIDEO-ID
+https://github.com/user-attachments/assets/1b8688eb-efcd-4769-8f3b-06cfa5b7445e
 
-If the player does not load, the video is also available in the repository: [`src/assets/video/saldo.mp4`](src/assets/video/saldo.mp4).
-
-## Overview
-
-### The problem
-
-Small service companies (consultancies, agencies, clinics, training centres) usually keep their finances spread across different places: invoices in one tool, expenses in a spreadsheet, and a vague idea of how much clients still owe. Answering a simple question such as *"are we making money this year?"* means collecting numbers by hand.
-
-**Saldo** brings that information together. A company with 5 to 20 people can manage its clients and catalogue, create and issue invoices, record expenses, and see on a single dashboard how much it billed, how much it spent, what the result is, and which invoices are overdue. The name comes from the Portuguese word for *balance*: what is left once expenses are taken from revenue.
-
-### What you can do
-
-- **Bill clients.** Create invoice drafts with as many lines as needed, choosing products or services and quantities. VAT is calculated per line at the right rate (23%, 13% or 6%) and the totals update as you type. When the draft is ready, it is issued with the next number in the series, such as `FT 2026/0042`.
-- **Follow every invoice through its lifecycle.** An issued invoice can be marked as paid or cancelled with a reason, and is never edited or deleted afterwards. Invoices that pass their due date are flagged as overdue, with the number of days late.
-- **Record expenses** from the supplier's receipt or invoice, by category and payment method, with the base amount and VAT kept separately.
-- **Keep a catalogue** of clients (with Portuguese VAT number validation), products and services with their VAT rates, and expense categories. Products that leave the catalogue are deactivated rather than deleted, so past invoices stay intact.
-- **See the business at a glance** on a dashboard with yearly revenue, expenses and result, outstanding and overdue amounts, a month-by-month chart, expenses by category, and the most overdue invoices.
-- **Work as a team** with two roles: users handle day-to-day work, while admins can also cancel invoices, delete records and manage accounts.
-
-A **demo account** comes with a fictional company and twelve months of activity (around 70 invoices in every state and more than 100 expenses), so the system can be explored without entering any data.
-
-### How it is built
-
-The backend is a **Spring Boot 4** REST API on **Java 21**, organised by feature, with business rules kept inside the domain entities rather than in controllers. Data lives in **PostgreSQL**, with the schema versioned through **Flyway** migrations and protected by database constraints. The frontend is an **Angular 22** single-page application using signals, reactive forms and Angular Material. Authentication uses **JWT** with BCrypt-hashed passwords and role-based access rules.
-
-The project pays particular attention to the problems that make invoicing software hard to get right: **concurrency** (two people issuing invoices at the same moment must never get the same number), **money** (exact decimal arithmetic and correct rounding), **immutability** (issued documents cannot change, and invoices keep a snapshot of product and client data), and **data integrity** (rules enforced both in the code and in the database).
-
-Everything is covered by a three-level test suite (fast unit tests, integration tests against a real PostgreSQL started by Testcontainers, and HTTP-level API tests) and packaged with **Docker**: multi-stage images for the backend and the frontend, nginx as a reverse proxy, and a Compose file that starts the whole system with one command.
-
----
 
 ## Features
 
