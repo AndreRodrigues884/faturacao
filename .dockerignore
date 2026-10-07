@@ -1,0 +1,8 @@
+target/
+frontend/
+.git/
+.vscode/
+.idea/
+docs/
+postman/
+notas/

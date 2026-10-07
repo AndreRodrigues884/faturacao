@@ -35,3 +35,5 @@ build/
 docs/
 
 .vscode/settings.json
+
+.env
