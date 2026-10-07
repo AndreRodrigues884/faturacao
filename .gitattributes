@@ -1,2 +1,6 @@
+# Scripts que correm em Linux (incluindo dentro dos contentores Docker): fins de linha LF
 /mvnw text eol=lf
+*.sh text eol=lf
+
+# Scripts do Windows: fins de linha CRLF
 *.cmd text eol=crlf

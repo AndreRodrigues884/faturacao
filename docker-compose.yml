@@ -1,7 +1,11 @@
+# Sistema completo: base de dados, backend e frontend.
+#   Tudo:                 docker compose up -d --build
+#   Só a base de dados:   docker compose up -d db      (para desenvolver com mvnw e ng serve)
 services:
   db:
     image: postgres:17
     container_name: faturacao-db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: faturacao
       POSTGRES_USER: faturacao
@@ -10,6 +14,38 @@ services:
       - "5433:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U faturacao -d faturacao"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: faturacao-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/faturacao
+      SPRING_DATASOURCE_USERNAME: faturacao
+      SPRING_DATASOURCE_PASSWORD: faturacao
+      SPRING_JPA_SHOW_SQL: "false"
+      JWT_SECRET: ${JWT_SECRET:?Defina o JWT_SECRET no ficheiro .env}
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@faturacao.local}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Defina o ADMIN_PASSWORD no ficheiro .env}
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build: ./frontend
+    container_name: faturacao-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "4000:80"
 
 volumes:
   pgdata:
