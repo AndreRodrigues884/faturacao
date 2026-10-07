@@ -1,0 +1,98 @@
+<div class="page-header">
+  <h1>Olá, {{ auth.currentUser()?.name }}</h1>
+  <mat-select class="year-select" [value]="year()" (selectionChange)="year.set($event.value)">
+    @for (option of years; track option) {
+      <mat-option [value]="option">{{ option }}</mat-option>
+    }
+  </mat-select>
+</div>
+
+@if (dashboard.isLoading()) {
+  <mat-progress-bar mode="indeterminate" />
+}
+
+@if (dashboard.error()) {
+  <p class="error-message">Não foi possível carregar o painel.</p>
+}
+
+@if (dashboard.value(); as data) {
+  <div class="kpis">
+    <mat-card appearance="outlined" class="kpi">
+      <span class="kpi-label">Receitas {{ data.year }}</span>
+      <span class="kpi-value">{{ data.totals.revenue | currency }}</span>
+      <span class="kpi-hint">sem IVA, faturas emitidas e pagas</span>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="kpi">
+      <span class="kpi-label">Despesas {{ data.year }}</span>
+      <span class="kpi-value">{{ data.totals.expenses | currency }}</span>
+      <span class="kpi-hint">sem IVA</span>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="kpi">
+      <span class="kpi-label">Resultado {{ data.year }}</span>
+      <span class="kpi-value" [class.negative]="data.totals.result < 0">{{ data.totals.result | currency }}</span>
+      <span class="kpi-hint">receitas − despesas</span>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="kpi">
+      <span class="kpi-label">A receber</span>
+      <span class="kpi-value">{{ data.receivables.openTotal | currency }}</span>
+      <span class="kpi-hint">{{ data.receivables.openCount }} fatura(s) emitida(s) por pagar</span>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="kpi" [class.alert]="data.receivables.overdueCount > 0">
+      <span class="kpi-label">Em atraso</span>
+      <span class="kpi-value">{{ data.receivables.overdueTotal | currency }}</span>
+      <span class="kpi-hint">{{ data.receivables.overdueCount }} fatura(s) vencida(s)</span>
+    </mat-card>
+  </div>
+
+  <mat-card appearance="outlined" class="section">
+    <mat-card-content>
+      <h2>Receitas e despesas por mês</h2>
+      <app-monthly-chart [months]="data.months" />
+    </mat-card-content>
+  </mat-card>
+
+  <div class="two-columns">
+    <mat-card appearance="outlined" class="section">
+      <mat-card-content>
+        <h2>Despesas por categoria</h2>
+        @for (category of data.expensesByCategory; track category.categoryId) {
+          <div class="category">
+            <div class="category-header">
+              <span>{{ category.categoryName }}</span>
+              <span>{{ category.total | currency }}</span>
+            </div>
+            <div class="bar">
+              <div class="bar-fill" [style.width.%]="categoryWidth(category.total)"></div>
+            </div>
+          </div>
+        } @empty {
+          <p class="empty">Sem despesas neste ano.</p>
+        }
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card appearance="outlined" class="section">
+      <mat-card-content>
+        <h2>Faturas mais atrasadas</h2>
+        @for (invoice of data.overdueInvoices; track invoice.id) {
+          <a class="overdue-row" [routerLink]="['/faturas', invoice.id]">
+            <div>
+              <div class="strong">{{ invoice.number }} · {{ invoice.clientName }}</div>
+              <div class="muted">Venceu a {{ invoice.dueDate | date: 'dd/MM/yyyy' }}</div>
+            </div>
+            <div class="overdue-right">
+              <span class="strong">{{ invoice.total | currency }}</span>
+              <app-invoice-status-badge [status]="invoice.status" [daysOverdue]="invoice.daysOverdue" />
+            </div>
+          </a>
+        } @empty {
+          <p class="empty">Nenhuma fatura em atraso. 🎉</p>
+        }
+      </mat-card-content>
+    </mat-card>
+  </div>
+}
