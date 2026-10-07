@@ -4,7 +4,7 @@
       <span class="brand-mark">
         <span class="material-symbols-outlined">account_balance</span>
       </span>
-      <span class="brand-name">Faturação</span>
+      <span class="brand-name">Saldo</span>
     </div>
 
     <div class="brand-copy">
@@ -20,6 +20,13 @@
   </aside>
 
   <section class="form-panel">
+    <div class="mobile-brand">
+      <span class="brand-mark">
+        <span class="material-symbols-outlined">account_balance</span>
+      </span>
+      <span>Saldo</span>
+    </div>
+
     <mat-card class="login-card" appearance="outlined">
       <mat-card-header>
         <mat-card-title>Iniciar sessão</mat-card-title>
@@ -53,7 +60,7 @@
             </p>
           }
 
-          <button mat-flat-button type="submit" [disabled]="loading()">
+          <button mat-flat-button type="submit" class="submit" [disabled]="loading()">
             @if (loading()) {
               <mat-spinner diameter="20" />
             } @else {
@@ -61,6 +68,24 @@
             }
           </button>
         </form>
+
+        @if (demo.value(); as credentials) {
+          <div class="separator"><span>ou</span></div>
+
+          <div class="demo">
+            <button
+              mat-stroked-button
+              type="button"
+              class="demo-button"
+              [disabled]="loading()"
+              (click)="loginAsDemo(credentials)"
+            >
+              <span class="material-symbols-outlined">play_circle</span>
+              Experimentar a demonstração
+            </button>
+            <p>Dados de exemplo dos últimos 12 meses. Sem registo necessário.</p>
+          </div>
+        }
       </mat-card-content>
     </mat-card>
 

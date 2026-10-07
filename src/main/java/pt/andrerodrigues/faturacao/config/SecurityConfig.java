@@ -34,7 +34,7 @@ import java.util.Base64;
  * É usado por:  o Spring Security, em todos os pedidos; TokenService (JwtEncoder); AuthService (PasswordEncoder)
  */
 @Configuration
-@EnableConfigurationProperties(SecurityProperties.class)
+@EnableConfigurationProperties({SecurityProperties.class, DemoProperties.class})
 public class SecurityConfig {
 
     @Bean
@@ -54,6 +54,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/demo/credentials").permitAll()
                         .requestMatchers("/api/users/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE,
                                 "/api/categories/**", "/api/clients/**", "/api/products/**").hasRole("ADMIN")

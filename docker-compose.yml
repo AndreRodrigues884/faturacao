@@ -35,6 +35,9 @@ services:
       JWT_SECRET: ${JWT_SECRET:?Defina o JWT_SECRET no ficheiro .env}
       ADMIN_EMAIL: ${ADMIN_EMAIL:-admin@faturacao.local}
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Defina o ADMIN_PASSWORD no ficheiro .env}
+      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-demo}
+      DEMO_EMAIL: ${DEMO_EMAIL:-demo@faturacao.local}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-demo12345}
     ports:
       - "8080:8080"
 

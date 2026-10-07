@@ -89,6 +89,35 @@
   }
 
   .line {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto auto;
+  }
+}
+
+@media (max-width: 720px) {
+  .section-header {
+    padding: 16px 16px 4px;
+  }
+
+  .mat-mdc-card-content,
+  .summary {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .line {
+    padding-bottom: 12px;
+    border-bottom: 1px dashed var(--app-border);
+
+    > :first-child {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    .mat-mdc-button-base {
+      width: 100%;
+    }
   }
 }

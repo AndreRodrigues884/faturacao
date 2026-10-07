@@ -97,6 +97,10 @@
     font-size: 22px;
     margin-bottom: 4px;
   }
+
+  mat-card-subtitle {
+    color: var(--app-text-muted);
+  }
 }
 
 form {
@@ -106,9 +110,57 @@ form {
   margin-top: 24px;
 }
 
-button[type='submit'] {
+.submit {
   height: 44px;
   margin-top: 8px;
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0 16px;
+  font-size: 12px;
+  color: var(--app-text-subtle);
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--app-border);
+  }
+}
+
+.demo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  p {
+    margin: 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--app-text-subtle);
+  }
+}
+
+.demo-button {
+  height: 44px;
+  width: 100%;
+}
+
+.mobile-brand {
+  display: none;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--app-text);
+
+  .brand-mark {
+    background: var(--app-primary);
+  }
 }
 
 .footnote {
@@ -131,5 +183,14 @@ button[type='submit'] {
 
   .brand-panel {
     display: none;
+  }
+
+  .mobile-brand {
+    display: flex;
+  }
+
+  .form-panel {
+    justify-content: flex-start;
+    padding-top: 48px;
   }
 }

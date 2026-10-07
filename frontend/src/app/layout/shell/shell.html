@@ -1,17 +1,23 @@
-<mat-sidenav-container class="shell">
+<!-- Estado do menu em mobile, guardado num checkbox escondido (sem lógica em TS). -->
+<input #navState type="checkbox" class="nav-state" tabindex="-1" aria-hidden="true" />
+
+<mat-sidenav-container class="shell" [class.nav-open]="navState.checked">
   <mat-sidenav mode="side" opened class="sidenav">
     <div class="brand">
       <span class="brand-mark">
         <span class="material-symbols-outlined">account_balance</span>
       </span>
       <div class="brand-text">
-        <span class="brand-name">Faturação</span>
+        <span class="brand-name">Saldo</span>
         <span class="brand-tagline">Gestão financeira</span>
       </div>
+      <button type="button" class="nav-close" aria-label="Fechar menu" (click)="navState.checked = false">
+        <span class="material-symbols-outlined">close</span>
+      </button>
     </div>
 
     <span class="nav-section">Geral</span>
-    <mat-nav-list class="nav">
+    <mat-nav-list class="nav" (click)="navState.checked = false">
       <a mat-list-item routerLink="/inicio" routerLinkActive="active">
         <span matListItemIcon class="material-symbols-outlined">space_dashboard</span>
         <span matListItemTitle>Início</span>
@@ -27,7 +33,7 @@
     </mat-nav-list>
 
     <span class="nav-section">Registos</span>
-    <mat-nav-list class="nav">
+    <mat-nav-list class="nav" (click)="navState.checked = false">
       <a mat-list-item routerLink="/clientes" routerLinkActive="active">
         <span matListItemIcon class="material-symbols-outlined">groups</span>
         <span matListItemTitle>Clientes</span>
@@ -44,7 +50,7 @@
 
     @if (auth.isAdmin()) {
       <span class="nav-section">Administração</span>
-      <mat-nav-list class="nav">
+      <mat-nav-list class="nav" (click)="navState.checked = false">
         <a mat-list-item routerLink="/utilizadores" routerLinkActive="active">
           <span matListItemIcon class="material-symbols-outlined">admin_panel_settings</span>
           <span matListItemTitle>Utilizadores</span>
@@ -54,7 +60,13 @@
   </mat-sidenav>
 
   <mat-sidenav-content class="main">
+    <div class="nav-backdrop" (click)="navState.checked = false"></div>
+
     <mat-toolbar class="toolbar">
+      <button type="button" class="menu-button" aria-label="Abrir menu" (click)="navState.checked = true">
+        <span class="material-symbols-outlined">menu</span>
+      </button>
+      <span class="mobile-brand">Saldo</span>
       <span class="spacer"></span>
       @if (auth.currentUser(); as user) {
         <div class="user">
@@ -66,13 +78,13 @@
         </div>
       }
       <span class="divider"></span>
-      <button mat-button (click)="changePassword()">
+      <button mat-button class="toolbar-action" (click)="changePassword()" aria-label="Mudar password">
         <span class="material-symbols-outlined">key</span>
-        Mudar password
+        <span class="label">Mudar password</span>
       </button>
-      <button mat-stroked-button (click)="auth.logout()">
+      <button mat-stroked-button class="toolbar-action" (click)="auth.logout()" aria-label="Sair">
         <span class="material-symbols-outlined">logout</span>
-        Sair
+        <span class="label">Sair</span>
       </button>
     </mat-toolbar>
 

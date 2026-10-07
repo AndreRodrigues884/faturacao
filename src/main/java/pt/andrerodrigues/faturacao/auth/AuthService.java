@@ -8,17 +8,19 @@ import pt.andrerodrigues.faturacao.auth.dto.ChangePasswordRequest;
 import pt.andrerodrigues.faturacao.auth.dto.LoginRequest;
 import pt.andrerodrigues.faturacao.auth.dto.LoginResponse;
 import pt.andrerodrigues.faturacao.common.BusinessRuleException;
+import pt.andrerodrigues.faturacao.config.DemoProperties;
 import pt.andrerodrigues.faturacao.user.UserRepository;
 import pt.andrerodrigues.faturacao.user.domain.User;
 import pt.andrerodrigues.faturacao.user.dto.UserResponse;
 
 /**
  * SERVICE - login (verifica credenciais e emite o token), dados do utilizador autenticado
- * e mudança da própria password.
+ * e mudança da própria password. A conta de demonstração não pode mudar de password.
  *
- * Fala com:     UserRepository, PasswordEncoder, TokenService
+ * Fala com:     UserRepository, PasswordEncoder, TokenService, DemoProperties
  * Lança:        BadCredentialsException (credenciais erradas ou conta inativa -> 401),
- *               BusinessRuleException (password atual errada ou nova igual à atual -> 422)
+ *               BusinessRuleException (password atual errada, nova igual à atual,
+ *               ou conta de demonstração -> 422)
  * É usado por:  AuthController
  */
 @Service
@@ -30,13 +32,16 @@ public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final DemoProperties demoProperties;
 
     public AuthService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder,
-                       TokenService tokenService) {
+                       TokenService tokenService,
+                       DemoProperties demoProperties) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
+        this.demoProperties = demoProperties;
     }
 
     public LoginResponse login(LoginRequest request) {
@@ -66,6 +71,9 @@ public class AuthService {
                 .filter(User::isActive)
                 .orElseThrow(() -> new BadCredentialsException("O utilizador já não está ativo"));
 
+        if (user.getEmail().equalsIgnoreCase(demoProperties.email())) {
+            throw new BusinessRuleException("A password da conta de demonstração não pode ser alterada");
+        }
         if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
             throw new BusinessRuleException("A password atual está incorreta");
         }

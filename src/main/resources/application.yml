@@ -21,13 +21,15 @@ spring:
   flyway:
     enabled: true
 
-app:
-  security:
-    jwt:
-      # Chave secreta em Base64 (mínimo 32 bytes). Em produção vem SEMPRE de uma variável de ambiente.
+app:                                    # 0 espaços
+  security:                             # 2 espaços
+    jwt:                                # 4 espaços
       secret: ${JWT_SECRET:ZGV2LW9ubHktc2VjcmV0LWNoYW5nZS1tZS1pbi1wcm9kdWN0aW9uLTAxMjM0NTY3ODk=}
       expiration: 8h
-    admin:
+    admin:                              # 4 espaços
       email: ${ADMIN_EMAIL:admin@faturacao.local}
       password: ${ADMIN_PASSWORD:admin12345}
       name: Administrador
+  demo:                                 # 2 espaços, alinhado com o "security:"
+    email: ${DEMO_EMAIL:demo@faturacao.local}       # 4 espaços
+    password: ${DEMO_PASSWORD:demo12345}             # 4 espaços

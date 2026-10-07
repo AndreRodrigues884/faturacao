@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import pt.andrerodrigues.faturacao.user.UserRepository;
 import pt.andrerodrigues.faturacao.user.domain.Role;
 import pt.andrerodrigues.faturacao.user.domain.User;
+import org.springframework.core.annotation.Order;
 
 /**
  * ARRANQUE - na primeira vez que a app arranca (tabela users vazia), cria o administrador
@@ -18,6 +19,7 @@ import pt.andrerodrigues.faturacao.user.domain.User;
  * É usado por:  o Spring, automaticamente, no fim do arranque
  */
 @Component
+@Order(1)
 public class AdminInitializer implements ApplicationRunner {
 
     private static final Logger log = LoggerFactory.getLogger(AdminInitializer.class);

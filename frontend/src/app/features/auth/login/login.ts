@@ -1,4 +1,4 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, httpResource } from '@angular/common/http';
 import { Component, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,11 +10,16 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../../../core/auth/auth.service';
 
+interface DemoCredentials {
+  email: string;
+  password: string;
+}
+
 /**
  * COMPONENTE - ecrã de login: formulário de email e password.
- * Em caso de sucesso vai para /inicio; em caso de erro mostra a mensagem.
+ * Se o backend estiver no perfil "demo", mostra também o botão "Entrar com a conta de demonstração".
  *
- * Fala com:     AuthService (login), Router (navegar depois do login)
+ * Fala com:     AuthService (login), Router (navegar depois do login), GET /api/demo/credentials
  * É usado por:  app.routes.ts (rota /login)
  */
 @Component({
@@ -43,6 +48,8 @@ export class Login {
   readonly loading = signal(false);
   readonly errorMessage = signal<string | null>(null);
 
+  protected readonly demo = httpResource<DemoCredentials>(() => '/api/demo/credentials');
+
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -63,5 +70,10 @@ export class Login {
         );
       },
     });
+  }
+
+  loginAsDemo(credentials: DemoCredentials): void {
+    this.form.setValue({ email: credentials.email, password: credentials.password });
+    this.submit();
   }
 }
