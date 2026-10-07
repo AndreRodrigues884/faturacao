@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
 
-import { authGuard, guestGuard } from './core/auth/auth.guards';
+import { authGuard, guestGuard, adminGuard } from './core/auth/auth.guards';
 import { Login } from './features/auth/login/login';
 import { Home } from './features/home/home';
 import { Shell } from './layout/shell/shell';
+
 
 /**
  * ROTAS - que endereço mostra que ecrã.
@@ -64,6 +65,11 @@ export const routes: Routes = [
     path: 'despesas',
     loadComponent: () =>
       import('./features/expenses/expense-list/expense-list').then((m) => m.ExpenseList),
+  },
+  {
+    path: 'utilizadores',
+    canActivate: [adminGuard],
+    loadComponent: () => import('./features/users/user-list/user-list').then((m) => m.UserList),
   },
   { path: '**', redirectTo: '' },
 ];

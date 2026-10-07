@@ -60,6 +60,10 @@ export class AuthService {
     return this.token() !== null;
   }
 
+  changePassword(currentPassword: string, newPassword: string): Observable<void> {
+    return this.http.post<void>('/api/auth/change-password', { currentPassword, newPassword });
+  }
+
   // ---------- Persistência ----------
 
   private saveSession(response: LoginResponse): void {
