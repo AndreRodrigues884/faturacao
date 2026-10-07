@@ -5,34 +5,46 @@
 }
 
 .badge {
-  padding: 3px 10px;
-  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px 2px 8px;
+  border-radius: 999px;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
+  line-height: 18px;
   white-space: nowrap;
+
+  &::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
 }
 
 .badge[data-status='DRAFT'] {
-  background: #eceff1;
-  color: #455a64;
+  background: var(--app-neutral-soft);
+  color: var(--app-text-muted);
 }
 
 .badge[data-status='ISSUED'] {
-  background: #e3f2fd;
-  color: #1565c0;
+  background: var(--app-info-soft);
+  color: var(--app-info);
 }
 
 .badge[data-status='PAID'] {
-  background: #e8f5e9;
-  color: #2e7d32;
+  background: var(--app-success-soft);
+  color: var(--app-success);
 }
 
 .badge[data-status='CANCELLED'] {
-  background: #ffebee;
-  color: #c62828;
+  background: var(--app-danger-soft);
+  color: var(--app-danger);
 }
 
 .overdue {
-  background: #fff3e0;
-  color: #e65100;
+  background: var(--app-warning-soft);
+  color: var(--app-warning);
 }

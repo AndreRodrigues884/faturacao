@@ -1,28 +1,43 @@
-<a mat-button routerLink="/faturas">← Voltar às faturas</a>
+<a mat-button routerLink="/faturas" class="back-link">
+  <span class="material-symbols-outlined">arrow_back</span>
+  Voltar às faturas
+</a>
 
 @if (loading()) {
   <mat-progress-bar mode="indeterminate" />
 }
 
 @if (invoice(); as invoice) {
-  <div class="header">
+  <div class="page-header">
     <div>
-      <h1>{{ invoice.number ?? 'Rascunho #' + invoice.id }}</h1>
-      <app-invoice-status-badge [status]="invoice.status" />
+      <span class="eyebrow">Fatura</span>
+      <div class="title-row">
+        <h1>{{ invoice.number ?? 'Rascunho #' + invoice.id }}</h1>
+        <app-invoice-status-badge [status]="invoice.status" />
+      </div>
     </div>
 
-    <div class="actions">
+    <div class="page-actions">
       @switch (invoice.status) {
         @case ('DRAFT') {
-          <a mat-stroked-button [routerLink]="['/faturas', invoice.id, 'editar']">Editar</a>
           <button mat-button class="danger" [disabled]="busy()" (click)="deleteDraft(invoice)">Apagar</button>
-          <button mat-flat-button [disabled]="busy()" (click)="issue(invoice)">Emitir</button>
+          <a mat-stroked-button [routerLink]="['/faturas', invoice.id, 'editar']">
+            <span class="material-symbols-outlined">edit</span>
+            Editar
+          </a>
+          <button mat-flat-button [disabled]="busy()" (click)="issue(invoice)">
+            <span class="material-symbols-outlined">send</span>
+            Emitir
+          </button>
         }
         @case ('ISSUED') {
           @if (auth.isAdmin()) {
             <button mat-button class="danger" [disabled]="busy()" (click)="cancel(invoice)">Anular</button>
           }
-          <button mat-flat-button [disabled]="busy()" (click)="markAsPaid(invoice)">Marcar como paga</button>
+          <button mat-flat-button [disabled]="busy()" (click)="markAsPaid(invoice)">
+            <span class="material-symbols-outlined">check_circle</span>
+            Marcar como paga
+          </button>
         }
       }
     </div>
@@ -30,13 +45,16 @@
 
   @if (invoice.status === 'CANCELLED') {
     <div class="cancelled-banner">
-      Anulada em {{ invoice.cancelledAt | date: 'dd/MM/yyyy HH:mm' }}. Motivo: {{ invoice.cancellationReason }}
+      <span class="material-symbols-outlined">block</span>
+      <span>
+        Anulada em {{ invoice.cancelledAt | date: 'dd/MM/yyyy HH:mm' }}. Motivo: {{ invoice.cancellationReason }}
+      </span>
     </div>
   }
 
-  <div class="info">
-    <mat-card appearance="outlined">
-      <mat-card-content>
+  <div class="panel document">
+    <div class="info">
+      <div class="info-block">
         <h3>Cliente</h3>
         <p class="strong">{{ invoice.client.name }}</p>
         <p>NIF {{ invoice.client.nif }}</p>
@@ -46,65 +64,78 @@
         @if (invoice.client.postalCode || invoice.client.city) {
           <p>{{ invoice.client.postalCode }} {{ invoice.client.city }}</p>
         }
-      </mat-card-content>
-    </mat-card>
+      </div>
 
-    <mat-card appearance="outlined">
-      <mat-card-content>
+      <div class="info-block">
         <h3>Datas</h3>
-        <p>Emissão: {{ (invoice.issueDate | date: 'dd/MM/yyyy') ?? 'por emitir' }}</p>
-        <p>Vencimento: {{ invoice.dueDate | date: 'dd/MM/yyyy' }}</p>
-        @if (invoice.paidDate) {
-          <p>Pagamento: {{ invoice.paidDate | date: 'dd/MM/yyyy' }}</p>
-        }
-      </mat-card-content>
-    </mat-card>
-  </div>
+        <dl>
+          <dt>Emissão</dt>
+          <dd>{{ (invoice.issueDate | date: 'dd/MM/yyyy') ?? 'por emitir' }}</dd>
+          <dt>Vencimento</dt>
+          <dd>{{ invoice.dueDate | date: 'dd/MM/yyyy' }}</dd>
+          @if (invoice.paidDate) {
+            <dt>Pagamento</dt>
+            <dd>{{ invoice.paidDate | date: 'dd/MM/yyyy' }}</dd>
+          }
+        </dl>
+      </div>
 
-  @if (invoice.notes) {
-    <p class="notes">{{ invoice.notes }}</p>
-  }
+      <div class="info-block amount-block">
+        <h3>Total a pagar</h3>
+        <p class="big-amount">{{ invoice.total | currency }}</p>
+      </div>
+    </div>
 
-  <table mat-table [dataSource]="invoice.lines" class="lines">
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef>Descrição</th>
-      <td mat-cell *matCellDef="let line">
-        <span class="code">{{ line.productCode }}</span> {{ line.description }}
-      </td>
-    </ng-container>
+    @if (invoice.notes) {
+      <p class="notes">
+        <span class="material-symbols-outlined">sticky_note_2</span>
+        {{ invoice.notes }}
+      </p>
+    }
 
-    <ng-container matColumnDef="quantity">
-      <th mat-header-cell *matHeaderCellDef class="number">Qtd.</th>
-      <td mat-cell *matCellDef="let line" class="number">{{ line.quantity | number: '1.0-3' }}</td>
-    </ng-container>
+    <table mat-table [dataSource]="invoice.lines" class="lines">
+      <ng-container matColumnDef="description">
+        <th mat-header-cell *matHeaderCellDef>Descrição</th>
+        <td mat-cell *matCellDef="let line">
+          <span class="code">{{ line.productCode }}</span> {{ line.description }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="unitPrice">
-      <th mat-header-cell *matHeaderCellDef class="number">Preço</th>
-      <td mat-cell *matCellDef="let line" class="number">{{ line.unitPrice | currency }}</td>
-    </ng-container>
+      <ng-container matColumnDef="quantity">
+        <th mat-header-cell *matHeaderCellDef class="number">Qtd.</th>
+        <td mat-cell *matCellDef="let line" class="number">{{ line.quantity | number: '1.0-3' }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="vat">
-      <th mat-header-cell *matHeaderCellDef class="number">IVA</th>
-      <td mat-cell *matCellDef="let line" class="number">{{ line.vatPercentage | number: '1.0-2' }}%</td>
-    </ng-container>
+      <ng-container matColumnDef="unitPrice">
+        <th mat-header-cell *matHeaderCellDef class="number">Preço</th>
+        <td mat-cell *matCellDef="let line" class="number">{{ line.unitPrice | currency }}</td>
+      </ng-container>
 
-    <ng-container matColumnDef="lineNet">
-      <th mat-header-cell *matHeaderCellDef class="number">Base</th>
-      <td mat-cell *matCellDef="let line" class="number">{{ line.lineNet | currency }}</td>
-    </ng-container>
+      <ng-container matColumnDef="vat">
+        <th mat-header-cell *matHeaderCellDef class="number">IVA</th>
+        <td mat-cell *matCellDef="let line" class="number muted">{{ line.vatPercentage | number: '1.0-2' }}%</td>
+      </ng-container>
 
-    <ng-container matColumnDef="lineTotal">
-      <th mat-header-cell *matHeaderCellDef class="number">Total</th>
-      <td mat-cell *matCellDef="let line" class="number">{{ line.lineTotal | currency }}</td>
-    </ng-container>
+      <ng-container matColumnDef="lineNet">
+        <th mat-header-cell *matHeaderCellDef class="number">Base</th>
+        <td mat-cell *matCellDef="let line" class="number">{{ line.lineNet | currency }}</td>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="lineColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: lineColumns"></tr>
-  </table>
+      <ng-container matColumnDef="lineTotal">
+        <th mat-header-cell *matHeaderCellDef class="number">Total</th>
+        <td mat-cell *matCellDef="let line" class="number cell-primary">{{ line.lineTotal | currency }}</td>
+      </ng-container>
 
-  <div class="totals">
-    <div><span>Total sem IVA</span><span>{{ invoice.totalNet | currency }}</span></div>
-    <div><span>IVA</span><span>{{ invoice.totalVat | currency }}</span></div>
-    <div class="grand-total"><span>Total</span><span>{{ invoice.total | currency }}</span></div>
+      <tr mat-header-row *matHeaderRowDef="lineColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: lineColumns"></tr>
+    </table>
+
+    <div class="summary">
+      <div class="totals">
+        <div><span>Total sem IVA</span><span>{{ invoice.totalNet | currency }}</span></div>
+        <div><span>IVA</span><span>{{ invoice.totalVat | currency }}</span></div>
+        <div class="grand-total"><span>Total</span><span>{{ invoice.total | currency }}</span></div>
+      </div>
+    </div>
   </div>
 }

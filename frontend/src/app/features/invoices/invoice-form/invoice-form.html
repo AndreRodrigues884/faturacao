@@ -1,11 +1,24 @@
-<a mat-button [routerLink]="backLink()">← Voltar</a>
-<h1>{{ isEdit() ? 'Editar rascunho' : 'Nova fatura' }}</h1>
+<a mat-button [routerLink]="backLink()" class="back-link">
+  <span class="material-symbols-outlined">arrow_back</span>
+  Voltar
+</a>
+
+<div class="page-header">
+  <div>
+    <span class="eyebrow">Fatura</span>
+    <h1>{{ isEdit() ? 'Editar rascunho' : 'Nova fatura' }}</h1>
+    <p class="page-subtitle">A fatura fica guardada como rascunho até ser emitida.</p>
+  </div>
+</div>
 
 @if (loading()) {
   <mat-progress-bar mode="indeterminate" />
 } @else {
   <form [formGroup]="form" (ngSubmit)="save()">
     <mat-card appearance="outlined" class="section">
+      <div class="section-header">
+        <h2>Dados gerais</h2>
+      </div>
       <mat-card-content class="header-grid">
         <mat-form-field appearance="outline">
           <mat-label>Cliente</mat-label>
@@ -43,71 +56,92 @@
       </mat-card-content>
     </mat-card>
 
-    <h2>Linhas</h2>
+    <mat-card appearance="outlined" class="section">
+      <div class="section-header">
+        <h2>Linhas</h2>
+        <span class="section-meta">{{ lines.controls.length }} linha(s)</span>
+      </div>
 
-    <div formArrayName="lines" class="lines">
-      @for (line of lines.controls; track line; let i = $index) {
-        <div class="line" [formGroupName]="i">
-          <mat-form-field appearance="outline" subscriptSizing="dynamic">
-            <mat-label>Produto</mat-label>
-            <mat-select formControlName="productId">
-              @for (product of products(); track product.id) {
-                <mat-option [value]="product.id" [disabled]="!product.active">
-                  {{ product.code }} · {{ product.name }} ({{ product.unitPrice | currency }})
-                  @if (!product.active) {
-                    (inativo)
+      <mat-card-content>
+        <div formArrayName="lines" class="lines">
+          @for (line of lines.controls; track line; let i = $index) {
+            <div class="line" [formGroupName]="i">
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>Produto</mat-label>
+                <mat-select formControlName="productId">
+                  @for (product of products(); track product.id) {
+                    <mat-option [value]="product.id" [disabled]="!product.active">
+                      {{ product.code }} · {{ product.name }} ({{ product.unitPrice | currency }})
+                      @if (!product.active) {
+                        (inativo)
+                      }
+                    </mat-option>
                   }
-                </mat-option>
-              }
-            </mat-select>
-            @if (line.controls.productId.hasError('required')) {
-              <mat-error>Escolha o produto</mat-error>
-            } @else if (line.controls.productId.hasError('server')) {
-              <mat-error>{{ line.controls.productId.getError('server') }}</mat-error>
-            }
-          </mat-form-field>
+                </mat-select>
+                @if (line.controls.productId.hasError('required')) {
+                  <mat-error>Escolha o produto</mat-error>
+                } @else if (line.controls.productId.hasError('server')) {
+                  <mat-error>{{ line.controls.productId.getError('server') }}</mat-error>
+                }
+              </mat-form-field>
 
-          <mat-form-field appearance="outline" subscriptSizing="dynamic">
-            <mat-label>Quantidade</mat-label>
-            <input matInput type="number" step="0.001" min="0" formControlName="quantity" />
-            @if (line.controls.quantity.hasError('required')) {
-              <mat-error>Obrigatória</mat-error>
-            } @else if (line.controls.quantity.hasError('min')) {
-              <mat-error>Maior que zero</mat-error>
-            } @else if (line.controls.quantity.hasError('server')) {
-              <mat-error>{{ line.controls.quantity.getError('server') }}</mat-error>
-            }
-          </mat-form-field>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic">
+                <mat-label>Quantidade</mat-label>
+                <input matInput type="number" step="0.001" min="0" formControlName="quantity" />
+                @if (line.controls.quantity.hasError('required')) {
+                  <mat-error>Obrigatória</mat-error>
+                } @else if (line.controls.quantity.hasError('min')) {
+                  <mat-error>Maior que zero</mat-error>
+                } @else if (line.controls.quantity.hasError('server')) {
+                  <mat-error>{{ line.controls.quantity.getError('server') }}</mat-error>
+                }
+              </mat-form-field>
 
-          <div class="line-total">
-            @if (previews()[i]; as preview) {
-              {{ preview.totalCents / 100 | currency }}
-            } @else {
-              —
-            }
-          </div>
+              <div class="line-total">
+                @if (previews()[i]; as preview) {
+                  {{ preview.totalCents / 100 | currency }}
+                } @else {
+                  —
+                }
+              </div>
 
-          <button mat-button type="button" class="danger" (click)="removeLine(i)">Remover</button>
+              <button mat-button type="button" class="danger" (click)="removeLine(i)">Remover</button>
+            </div>
+          }
         </div>
-      }
-    </div>
 
-    <button mat-stroked-button type="button" (click)="addLine()">+ Acrescentar linha</button>
+        <button mat-stroked-button type="button" class="add-line" (click)="addLine()">
+          <span class="material-symbols-outlined">add</span>
+          Acrescentar linha
+        </button>
+      </mat-card-content>
 
-    <div class="totals">
-      <div><span>Total sem IVA</span><span>{{ totals().netCents / 100 | currency }}</span></div>
-      <div><span>IVA</span><span>{{ totals().vatCents / 100 | currency }}</span></div>
-      <div class="grand-total"><span>Total</span><span>{{ totals().totalCents / 100 | currency }}</span></div>
-      <p class="hint">Valores estimados. Os definitivos são calculados pelo servidor ao guardar.</p>
-    </div>
+      <div class="summary">
+        <div class="totals">
+          <div><span>Total sem IVA</span><span>{{ totals().netCents / 100 | currency }}</span></div>
+          <div><span>IVA</span><span>{{ totals().vatCents / 100 | currency }}</span></div>
+          <div class="grand-total"><span>Total</span><span>{{ totals().totalCents / 100 | currency }}</span></div>
+          <p class="hint">
+            <span class="material-symbols-outlined">info</span>
+            Valores estimados. Os definitivos são calculados pelo servidor ao guardar.
+          </p>
+        </div>
+      </div>
+    </mat-card>
 
     @if (errorMessage(); as message) {
-      <p class="error-message">{{ message }}</p>
+      <p class="error-message">
+        <span class="material-symbols-outlined">error</span>
+        {{ message }}
+      </p>
     }
 
     <div class="form-actions">
       <a mat-button [routerLink]="backLink()">Cancelar</a>
-      <button mat-flat-button type="submit" [disabled]="saving()">Guardar rascunho</button>
+      <button mat-flat-button type="submit" [disabled]="saving()">
+        <span class="material-symbols-outlined">save</span>
+        Guardar rascunho
+      </button>
     </div>
   </form>
 }

@@ -1,29 +1,79 @@
 <mat-sidenav-container class="shell">
   <mat-sidenav mode="side" opened class="sidenav">
-    <div class="brand">Faturação</div>
-    <mat-nav-list>
-      <a mat-list-item routerLink="/inicio" routerLinkActive="active">Início</a>
-      <a mat-list-item routerLink="/faturas" routerLinkActive="active">Faturas</a>
-      <a mat-list-item routerLink="/despesas" routerLinkActive="active">Despesas</a>
-      <a mat-list-item routerLink="/clientes" routerLinkActive="active">Clientes</a>
-      <a mat-list-item routerLink="/produtos" routerLinkActive="active">Produtos</a>
-      <a mat-list-item routerLink="/categorias" routerLinkActive="active">Categorias</a>
-      @if (auth.isAdmin()) {
-        <a mat-list-item routerLink="/utilizadores" routerLinkActive="active">Utilizadores</a>
-      }
+    <div class="brand">
+      <span class="brand-mark">
+        <span class="material-symbols-outlined">account_balance</span>
+      </span>
+      <div class="brand-text">
+        <span class="brand-name">Faturação</span>
+        <span class="brand-tagline">Gestão financeira</span>
+      </div>
+    </div>
+
+    <span class="nav-section">Geral</span>
+    <mat-nav-list class="nav">
+      <a mat-list-item routerLink="/inicio" routerLinkActive="active">
+        <span matListItemIcon class="material-symbols-outlined">space_dashboard</span>
+        <span matListItemTitle>Início</span>
+      </a>
+      <a mat-list-item routerLink="/faturas" routerLinkActive="active">
+        <span matListItemIcon class="material-symbols-outlined">receipt_long</span>
+        <span matListItemTitle>Faturas</span>
+      </a>
+      <a mat-list-item routerLink="/despesas" routerLinkActive="active">
+        <span matListItemIcon class="material-symbols-outlined">payments</span>
+        <span matListItemTitle>Despesas</span>
+      </a>
     </mat-nav-list>
+
+    <span class="nav-section">Registos</span>
+    <mat-nav-list class="nav">
+      <a mat-list-item routerLink="/clientes" routerLinkActive="active">
+        <span matListItemIcon class="material-symbols-outlined">groups</span>
+        <span matListItemTitle>Clientes</span>
+      </a>
+      <a mat-list-item routerLink="/produtos" routerLinkActive="active">
+        <span matListItemIcon class="material-symbols-outlined">inventory_2</span>
+        <span matListItemTitle>Produtos</span>
+      </a>
+      <a mat-list-item routerLink="/categorias" routerLinkActive="active">
+        <span matListItemIcon class="material-symbols-outlined">sell</span>
+        <span matListItemTitle>Categorias</span>
+      </a>
+    </mat-nav-list>
+
+    @if (auth.isAdmin()) {
+      <span class="nav-section">Administração</span>
+      <mat-nav-list class="nav">
+        <a mat-list-item routerLink="/utilizadores" routerLinkActive="active">
+          <span matListItemIcon class="material-symbols-outlined">admin_panel_settings</span>
+          <span matListItemTitle>Utilizadores</span>
+        </a>
+      </mat-nav-list>
+    }
   </mat-sidenav>
 
-  <mat-sidenav-content>
+  <mat-sidenav-content class="main">
     <mat-toolbar class="toolbar">
       <span class="spacer"></span>
       @if (auth.currentUser(); as user) {
-        <span class="user">
-          {{ user.name }} · {{ user.role === 'ADMIN' ? 'Administrador' : 'Utilizador' }}
-        </span>
+        <div class="user">
+          <span class="avatar">{{ user.name.charAt(0) }}</span>
+          <div class="user-text">
+            <span class="user-name">{{ user.name }}</span>
+            <span class="user-role">{{ user.role === 'ADMIN' ? 'Administrador' : 'Utilizador' }}</span>
+          </div>
+        </div>
       }
-      <button mat-button (click)="changePassword()">Mudar password</button>
-      <button mat-stroked-button (click)="auth.logout()">Sair</button>
+      <span class="divider"></span>
+      <button mat-button (click)="changePassword()">
+        <span class="material-symbols-outlined">key</span>
+        Mudar password
+      </button>
+      <button mat-stroked-button (click)="auth.logout()">
+        <span class="material-symbols-outlined">logout</span>
+        Sair
+      </button>
     </mat-toolbar>
 
     <main class="content">
